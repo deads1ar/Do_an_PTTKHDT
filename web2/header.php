@@ -45,7 +45,7 @@ $product = isset($_GET['product']) ? $_GET['product'] : "";
                             <a href="/web2/sanpham.php?product=New Balance">Áo khoác</a>
                         </li>
                         <li class="<?= ($current_page == 'checkout.php') ? 'active' : '' ?>">
-                            <a href="/web2/checkout.php">Giỏ hàng</a>
+                            <a href="/WEB2/web2/checkout.php">Giỏ hàng</a>
                         </li>
                     </ul>
                 </nav>

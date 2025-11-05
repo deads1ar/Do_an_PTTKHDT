@@ -104,10 +104,7 @@ $row = $result->fetch_assoc();
 </head>
 
 <body>
-    <!-- Page Preloder -->
-    <div id="preloder">
-        <div class="loader"></div>
-    </div>
+   
 
     <!-- Offcanvas Menu Begin -->
     <div class="offcanvas-menu-overlay"></div>
@@ -263,13 +260,28 @@ $imgPath = 'img/sanpham/' . $tenFile;
 
                                 </li>
                                 <li>
-                                    <label for="size">Chọn size:</label>
-<select name="IDSIZE" id="size" required>
-  <option value="S">S</option>
-  <option value="M">M</option>
-  <option value="L">L</option>
-  <option value="XL">XL</option>
+<span>Chọn size:</span>
+<select name="IDSIZE" required>
+    <?php
+    // Chỉ lấy các size còn hàng của sản phẩm hiện tại
+    $sql_sizes = "SELECT DISTINCT IDSIZE FROM AO WHERE TEN = ? AND TRANGTHAI = 1";
+    $stmt_sizes = $conn->prepare($sql_sizes);
+    $stmt_sizes->bind_param("s", $row['TEN']);
+    $stmt_sizes->execute();
+    $result_sizes = $stmt_sizes->get_result();
+
+    // Hiển thị size tương ứng
+    if ($result_sizes->num_rows > 0) {
+        while ($size_row = $result_sizes->fetch_assoc()) {
+            $size = $size_row['IDSIZE'];
+            echo "<option value='$size' " . (($row['IDSIZE'] == $size) ? 'selected' : '') . ">$size</option>";
+        }
+    } else {
+        echo "<option disabled>Hết hàng</option>";
+    }
+    ?>
 </select>
+
 
 
                                 </li>
@@ -298,10 +310,31 @@ if ($result_loai && $result_loai->num_rows > 0) {
     $idloai = $row_loai['IDLOAI'];
     $tenloai = $row_loai['TENLOAI'];
 }
+// Truy vấn sản phẩm liên quan (mỗi tên chỉ hiển thị 1 lần, chuẩn hóa tên)
+$sql_related = "
+    SELECT 
+        MIN(a.IDAO) AS IDAO,
+        a.TEN,
+        MIN(a.GIA) AS GIA,
+        MAX(a.TRANGTHAI) AS TRANGTHAI,
+        MIN(a.URL) AS URL
+    FROM ao a
+    WHERE a.IDLOAI = ?
+      AND a.IDAO != ?
+      AND TRIM(LOWER(a.TEN)) != (
+          SELECT TRIM(LOWER(TEN)) FROM ao WHERE IDAO = ?
+      )
+    GROUP BY TRIM(LOWER(a.TEN))
+    ORDER BY MAX(a.TRANGTHAI) DESC
+    LIMIT 8
+";
 
-// Truy vấn sản phẩm liên quan (cùng loại, khác ID hiện tại)
-$sql_related = "SELECT * FROM ao WHERE IDLOAI = $idloai AND IDAO != $id LIMIT 8";
-$result_related = $conn->query($sql_related);
+$stmt_related = $conn->prepare($sql_related);
+$stmt_related->bind_param('iii', $idloai, $id, $id);
+$stmt_related->execute();
+$result_related = $stmt_related->get_result();
+
+
 ?>
 
             <!-- Related Products Section -->
@@ -507,11 +540,11 @@ $stock_label = ($related_row['TRANGTHAI'] == 1) ? '' : '<div class="label stocko
     <script>
         $(document).ready(function() {
             $('.related-products').owlCarousel({
-                loop: true,
+                loop: false,
                 margin: 20,
                 nav: true,
                 dots: true,
-                autoplay: true,
+                autoplay: false,
                 autoplayTimeout: 3000,
                 autoplayHoverPause: true,
                 responsive: {

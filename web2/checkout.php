@@ -3,9 +3,10 @@ session_start();
 if(isset($_SESSION['IDKH']))
 $idkh = $_SESSION['IDKH'];
 else 
-header("location:/web2/dangnhap.html");
-$conn = mysqli_connect('localhost','root','','web_db');
-$sql0 = "SELECT * FROM kh WHERE IDKH = '$idkh'";
+ $idkh = 0; 
+$conn = mysqli_connect('localhost','root','','qlch');
+$sql0 = "SELECT * FROM khachhang WHERE IDKH = '$idkh'";
+
 $result0 = $conn->query($sql0);
 $row0 = $result0->fetch_assoc(); 
 ?>
@@ -110,7 +111,8 @@ $row0 = $result0->fetch_assoc();
             else{
                 echo "<script>console.log('PHP says:not-empty');</script>";
             foreach($usercart as $productid=>$quantity) { 
-                $sql = "SELECT * FROM sp WHERE IDSP = $productid";
+                $sql = "SELECT * FROM ao WHERE IDAO = $productid";
+
             $result = $conn->query($sql);    
             $row = $result->fetch_assoc();
             ?>
@@ -120,14 +122,14 @@ $row0 = $result0->fetch_assoc();
                         <div class="product__item__pic1 set-bg" data-setbg="<?php echo $row['URL']; ?>"></div>
                     </td>
                     <td><?php echo $row['TEN']; ?></td>
-                    <td><?php echo number_format($row['GIABANKM'],0,"",".") ."đ"; ?></td>
+                    <td><?php echo number_format($row['GIA'],0,"",".") ."đ"; ?></td>
                     <td>
                     <input type="number" value="<?php echo $quantity; ?>" min="1" class="quantity-input"
                         data-productid="<?php echo $productid; ?>"
-                        data-price="<?php echo $row['GIABANKM']; ?>"
+                        data-price="<?php echo $row['GIA']; ?>"
                         oninput="updateRowTotal(this)">
                     </td>
-                    <td class="total-price"><?php echo number_format(($row['GIABANKM'] * $quantity),0,"",".") ."đ"; ?></td>
+                    <td class="total-price"><?php echo number_format(($row['GIA'] * $quantity),0,"",".") ."đ"; ?></td>
                     <td> 
                     <button onclick="removeItem('<?php echo $productid; ?>', this)">Xóa</button>
                         <script>
@@ -208,7 +210,7 @@ function updateCookieQuantity(productId, quantity) {
                             <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="checkout__form__input">
                                     <p>Họ Tên<span>*</span></p>
-                                    <input type="text" value="<?php echo $row0['NAME'];?>" >
+                                    <input type="text" value="<?php echo $row0['TEN'];?>" >
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6">
@@ -220,7 +222,7 @@ function updateCookieQuantity(productId, quantity) {
                             <div class="col-lg-12">
                                 <div class="checkout__form__input">
                                     <p>Địa chỉ <span>*</span></p>
-                                    <input id="addressInput" name="address" type="text" value="<?php echo $row0['DC'];?>" placeholder="Địa chỉ nhà " >
+                                    <input id="addressInput" name="address" type="text" value="<?php echo $row0['DIACHI'];?>" placeholder="Địa chỉ nhà " >
                                 </div>
                             </div>
                             
@@ -250,11 +252,13 @@ function updateCookieQuantity(productId, quantity) {
                                             $usercart = json_decode($_COOKIE[$userCartCookie],true);
                                         
                                         foreach ($usercart as $product => $quantity) {
-                                            $sql = "SELECT * FROM sp WHERE IDSP = '$product'";
+                                            $sql = "SELECT * FROM ao WHERE IDAO = '$product'";
+
                                             $result = $conn->query($sql);
                                             $row = $result->fetch_assoc();
-                                            echo "<li>" . $count . ". " . $row['TEN'] . "<span>" . number_format($row['GIABANKM'],0,"",".") . "đ" . "</span></li>";
-                                            $tong_gio_hang += $quantity*$row['GIABANKM'];
+                                          echo "<li>" . $count . ". " . $row['TEN'] . "<span>" . number_format($row['GIA'],0,"",".") . "đ" . "</span></li>";
+                                           $tong_gio_hang += $quantity * $row['GIA'];
+
                                             $count++;
                                         }
                                     }

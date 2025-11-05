@@ -143,11 +143,40 @@ if (!isset($_GET['page'])) {
                         <?php
                         $limit = 6;
                         $offset = ($page - 1) * $limit;
-                        $product = isset($_GET['product']) ? mysqli_real_escape_string($conn, $_GET['product']) : '';
-                    $sql = "SELECT * FROM AO WHERE TRANGTHAI = 1 LIMIT $limit OFFSET $offset";
-$result = $conn->query($sql);
+                      
+                  $product = isset($_GET['product']) ? mysqli_real_escape_string($conn, $_GET['product']) : '';
+if ($product !== '') {
+    $sql = "SELECT MIN(IDAO) AS IDAO, TEN, GIA, MOTA, URL 
+            FROM AO 
+            WHERE TRANGTHAI = 1 AND IDLOAI = '$product' 
+            GROUP BY TEN, GIA, MOTA, URL 
+            ORDER BY MIN(IDAO) ASC 
+            LIMIT $limit OFFSET $offset";
 
-                        $result = $conn->query($sql);
+    $count_sql = "SELECT COUNT(DISTINCT TEN) AS count 
+                  FROM AO 
+                  WHERE TRANGTHAI = 1 AND IDLOAI = '$product'";
+} else {
+    $sql = "SELECT MIN(IDAO) AS IDAO, TEN, GIA, MOTA, URL 
+            FROM AO 
+            WHERE TRANGTHAI = 1 
+            GROUP BY TEN, GIA, MOTA, URL 
+            ORDER BY MIN(IDAO) ASC 
+            LIMIT $limit OFFSET $offset";
+
+    $count_sql = "SELECT COUNT(DISTINCT TEN) AS count 
+                  FROM AO 
+                  WHERE TRANGTHAI = 1";
+}
+
+
+
+$result = $conn->query($sql);
+$totalproduct = $conn->query($count_sql)->fetch_assoc()['count'];
+$totalpage = ceil($totalproduct / $limit);
+
+
+                     
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                                
@@ -219,9 +248,7 @@ $result = $conn->query($sql);
                         }
                         ?>
                         <?php
-                        $sql = "SELECT COUNT(*) AS count FROM AO WHERE TRANGTHAI = 1";
-$totalproduct = $conn->query($sql)->fetch_assoc()['count'];
-$totalpage = ceil($totalproduct / $limit);
+                 
 
                         ?>
                         <div class="col-lg-12 text-center">

@@ -11,14 +11,14 @@
         exit();
     }
     else{
-        $conn = mysqli_connect("localhost","root","","web_db");
+        $conn = mysqli_connect("localhost","root","","qlch");
     }
     //check if database connection succesfull
     if(!$conn){
         die("Connection failed: " . mysqli_connect_error());
     }
     // Check if username is already in use
-    $checkQuery = "SELECT IDKH FROM kh WHERE IDKH = ?";
+    $checkQuery = "SELECT IDKH FROM khachhang WHERE TEN = ?";
     $stmt = $conn->prepare($checkQuery);
     $stmt->bind_param("s", $username);
     $stmt->execute();
@@ -32,22 +32,12 @@
         exit(); // Stop further script execution
     }
     else{    
-        // Lấy mã KH mới nhất
-$result = $conn->query("SELECT IDKH FROM kh ORDER BY IDKH DESC LIMIT 1");
+ 
+    $sql = "INSERT INTO khachhang (TEN, PWORD, DIACHI, SDT) VALUES (?, ?, ?, ?)";
 
-if ($result->num_rows > 0) {
-    $row = $result->fetch_assoc();
-    $lastID = $row['IDKH']; // VD: KH002
-
-    // Lấy phần số, tăng lên
-    $num = (int)substr($lastID, 2); // Tách "002" => 2
-    $newID = 'KH' . str_pad($num + 1, 3, '0', STR_PAD_LEFT); // Tạo KH003
-} else {
-    $newID = "KH000"; // Trường hợp chưa có user nào
-}
-        $sql = "INSERT INTO kh (IDKH,NAME, MK, DC, SDT) VALUES (?,?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssss", $newID, $username, $password, $address, $phone_number);
+        $stmt->bind_param("ssss", $username, $password, $address, $phone_number);
+
         if ($stmt->execute()) {
             $stmt->close();
             $conn->close();

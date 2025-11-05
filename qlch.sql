@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 01, 2025 at 06:07 PM
+-- Generation Time: Nov 05, 2025 at 04:48 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -44,15 +44,45 @@ CREATE TABLE `ao` (
 
 INSERT INTO `ao` (`IDAO`, `IDLOAI`, `TEN`, `IDSIZE`, `GIA`, `TRANGTHAI`, `MOTA`, `URL`) VALUES
 (1, 1, 'Áo thun Polo', 'S', 120000, 1, 'Áo thun cotton thoáng mát', 'img/sanpham/aothun1.jpg'),
-(2, 2, 'Áo sơ mi trắng', 'M', 180000, 1, 'Áo sơ mi công sở tay dài', 'img/sanpham/aosomi1.jpg'),
-(3, 3, 'Áo khoác bomber', 'L', 350000, 1, 'Áo khoác chất liệu gió nhẹ', 'img/sanpham/aokhoac1.jpg'),
-(4, 4, 'Áo hoodie đen', 'XL', 250000, 1, 'Áo hoodie unisex form rộng', 'img/sanpham/aohoodie1.jpg'),
-(5, NULL, 'Áo len cổ tròn', 'M', 300000, 1, 'Áo len ấm mùa đông', 'img/sanpham/aolen1.jpg'),
-(6, 1, 'Áo phông basic', 'S', 100000, 1, 'Áo phông trơn 100% cotton', 'img/sanpham/aophong1.jpg'),
-(7, 2, 'Áo sơ mi caro', 'L', 190000, 1, 'Áo sơ mi caro trẻ trung', 'img/sanpham/aosomicaro1.jpg'),
-(8, 3, 'Áo khoác jean', 'XL', 400000, 1, 'Áo khoác jean xanh đậm', 'img/sanpham/aokhoacjean1.jpg'),
-(9, 1, 'Áo thun cổ trụ', 'M', 150000, 1, 'Áo cổ trụ phù hợp đi làm', 'img/sanpham/aocotru1.jpg'),
-(10, 1, 'Áo thể thao', 'L', 200000, 1, 'Áo thể thao thấm hút mồ hôi', 'img/sanpham/aothethao1.jpg');
+(2, 1, 'Áo thun Polo', 'M', 120000, 1, 'Áo thun cotton thoáng mát', 'img/sanpham/aothun1.jpg'),
+(3, 1, 'Áo thun Polo', 'L', 120000, 1, 'Áo thun cotton thoáng mát', 'img/sanpham/aothun1.jpg'),
+(4, 1, 'Áo thun Polo', 'XL', 120000, 0, 'Áo thun cotton thoáng mát', 'img/sanpham/aothun1.jpg'),
+(5, 2, 'Áo sơ mi trắng', 'S', 180000, 1, 'Áo sơ mi công sở tay dài', 'img/sanpham/aosomi1.jpg'),
+(6, 2, 'Áo sơ mi trắng', 'M', 180000, 0, 'Áo sơ mi công sở tay dài', 'img/sanpham/aosomi1.jpg'),
+(7, 2, 'Áo sơ mi trắng', 'L', 180000, 1, 'Áo sơ mi công sở tay dài', 'img/sanpham/aosomi1.jpg'),
+(8, 2, 'Áo sơ mi trắng', 'XL', 180000, 0, 'Áo sơ mi công sở tay dài', 'img/sanpham/aosomi1.jpg'),
+(9, 3, 'Áo khoác bomber', 'S', 350000, 1, 'Áo khoác chất liệu gió nhẹ', 'img/sanpham/aokhoac1.jpg'),
+(10, 3, 'Áo khoác bomber', 'M', 350000, 0, 'Áo khoác chất liệu gió nhẹ', 'img/sanpham/aokhoac1.jpg'),
+(11, 3, 'Áo khoác bomber', 'L', 350000, 1, 'Áo khoác chất liệu gió nhẹ', 'img/sanpham/aokhoac1.jpg'),
+(12, 3, 'Áo khoác bomber', 'XL', 350000, 0, 'Áo khoác chất liệu gió nhẹ', 'img/sanpham/aokhoac1.jpg'),
+(13, 3, 'Áo hoodie đen', 'S', 250000, 1, 'Áo hoodie unisex form rộng', 'img/sanpham/aohoodie1.jpg'),
+(14, 3, 'Áo hoodie đen', 'M', 250000, 0, 'Áo hoodie unisex form rộng', 'img/sanpham/aohoodie1.jpg'),
+(15, 3, 'Áo hoodie đen', 'L', 250000, 1, 'Áo hoodie unisex form rộng', 'img/sanpham/aohoodie1.jpg'),
+(16, 3, 'Áo hoodie đen', 'XL', 250000, 0, 'Áo hoodie unisex form rộng', 'img/sanpham/aohoodie1.jpg'),
+(17, 3, 'Áo len cổ tròn', 'S', 300000, 1, 'Áo len ấm mùa đông', 'img/sanpham/aolen1.jpg'),
+(18, 3, 'Áo len cổ tròn', 'M', 300000, 0, 'Áo len ấm mùa đông', 'img/sanpham/aolen1.jpg'),
+(19, 3, 'Áo len cổ tròn', 'L', 300000, 1, 'Áo len ấm mùa đông', 'img/sanpham/aolen1.jpg'),
+(20, 3, 'Áo len cổ tròn', 'XL', 300000, 0, 'Áo len ấm mùa đông', 'img/sanpham/aolen1.jpg'),
+(21, 1, 'Áo phông basic', 'S', 100000, 1, 'Áo phông trơn 100% cotton', 'img/sanpham/aophong1.jpg'),
+(22, 1, 'Áo phông basic', 'M', 100000, 0, 'Áo phông trơn 100% cotton', 'img/sanpham/aophong1.jpg'),
+(23, 1, 'Áo phông basic', 'L', 100000, 1, 'Áo phông trơn 100% cotton', 'img/sanpham/aophong1.jpg'),
+(24, 1, 'Áo phông basic', 'XL', 100000, 0, 'Áo phông trơn 100% cotton', 'img/sanpham/aophong1.jpg'),
+(25, 2, 'Áo sơ mi caro', 'S', 190000, 1, 'Áo sơ mi caro trẻ trung', 'img/sanpham/aosomicaro1.jpg'),
+(26, 2, 'Áo sơ mi caro', 'M', 190000, 0, 'Áo sơ mi caro trẻ trung', 'img/sanpham/aosomicaro1.jpg'),
+(27, 2, 'Áo sơ mi caro', 'L', 190000, 1, 'Áo sơ mi caro trẻ trung', 'img/sanpham/aosomicaro1.jpg'),
+(28, 2, 'Áo sơ mi caro', 'XL', 190000, 0, 'Áo sơ mi caro trẻ trung', 'img/sanpham/aosomicaro1.jpg'),
+(29, 3, 'Áo khoác jean', 'S', 400000, 1, 'Áo khoác jean xanh đậm', 'img/sanpham/aokhoacjean1.jpg'),
+(30, 3, 'Áo khoác jean', 'M', 400000, 0, 'Áo khoác jean xanh đậm', 'img/sanpham/aokhoacjean1.jpg'),
+(31, 3, 'Áo khoác jean', 'L', 400000, 1, 'Áo khoác jean xanh đậm', 'img/sanpham/aokhoacjean1.jpg'),
+(32, 3, 'Áo khoác jean', 'XL', 400000, 0, 'Áo khoác jean xanh đậm', 'img/sanpham/aokhoacjean1.jpg'),
+(33, 1, 'Áo thun cổ trụ', 'S', 150000, 1, 'Áo cổ trụ phù hợp đi làm', 'img/sanpham/aocotru1.jpg'),
+(34, 1, 'Áo thun cổ trụ', 'M', 150000, 0, 'Áo cổ trụ phù hợp đi làm', 'img/sanpham/aocotru1.jpg'),
+(35, 1, 'Áo thun cổ trụ', 'L', 150000, 1, 'Áo cổ trụ phù hợp đi làm', 'img/sanpham/aocotru1.jpg'),
+(36, 1, 'Áo thun cổ trụ', 'XL', 150000, 0, 'Áo cổ trụ phù hợp đi làm', 'img/sanpham/aocotru1.jpg'),
+(37, 1, 'Áo thể thao', 'S', 200000, 1, 'Áo thể thao thấm hút mồ hôi', 'img/sanpham/aothethao1.jpg'),
+(38, 1, 'Áo thể thao', 'M', 200000, 0, 'Áo thể thao thấm hút mồ hôi', 'img/sanpham/aothethao1.jpg'),
+(39, 1, 'Áo thể thao', 'L', 200000, 1, 'Áo thể thao thấm hút mồ hôi', 'img/sanpham/aothethao1.jpg'),
+(40, 1, 'Áo thể thao', 'XL', 200000, 0, 'Áo thể thao thấm hút mồ hôi', 'img/sanpham/aothethao1.jpg');
 
 -- --------------------------------------------------------
 
@@ -124,7 +154,8 @@ INSERT INTO `khachhang` (`IDKH`, `TEN`, `SDT`, `DIACHI`, `PWORD`) VALUES
 (7, 'Bùi Văn G', '0955566778', 'Nha Trang', 'pw123'),
 (8, 'Vũ Thị H', '0922334455', 'Bắc Ninh', '4567'),
 (9, 'Lý Văn I', '0945566778', 'Nam Định', 'xyz'),
-(10, 'Phan Thị K', '0967788990', 'Thanh Hóa', '0000');
+(10, 'Phan Thị K', '0967788990', 'Thanh Hóa', '0000'),
+(11, '1', '1', '1', '1');
 
 -- --------------------------------------------------------
 
@@ -145,8 +176,7 @@ CREATE TABLE `loaiao` (
 INSERT INTO `loaiao` (`IDLOAI`, `TENLOAI`, `MOTA`) VALUES
 (1, 'Áo thun', 'Các mẫu áo thun thoáng mát, năng động'),
 (2, 'Áo sơ mi', 'Áo sơ mi công sở, thời trang nam nữ'),
-(3, 'Áo khoác', 'Áo khoác bomber, jean, gió, v.v.'),
-(4, 'Áo hoodie', 'Áo hoodie form rộng, unisex');
+(3, 'Áo khoác', 'Áo khoác bomber, jean, gió, v.v.');
 
 -- --------------------------------------------------------
 
@@ -226,12 +256,6 @@ ALTER TABLE `nhanvien`
 --
 
 --
--- AUTO_INCREMENT for table `ao`
---
-ALTER TABLE `ao`
-  MODIFY `IDAO` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
---
 -- AUTO_INCREMENT for table `donhang`
 --
 ALTER TABLE `donhang`
@@ -241,7 +265,7 @@ ALTER TABLE `donhang`
 -- AUTO_INCREMENT for table `khachhang`
 --
 ALTER TABLE `khachhang`
-  MODIFY `IDKH` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `IDKH` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `loaiao`
