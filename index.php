@@ -15,20 +15,23 @@
     rel="stylesheet">
 
     <!-- Css Styles -->
-    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css">
-    <link rel="stylesheet" href="css/elegant-icons.css" type="text/css">
-    <link rel="stylesheet" href="css/jquery-ui.min.css" type="text/css">
-    <link rel="stylesheet" href="css/magnific-popup.css" type="text/css">
-    <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
-    <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
-    <link rel="stylesheet" href="css/style.css" type="text/css">
+    <link rel="stylesheet" href="web2/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="web2/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="web2/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="web2/css/jquery-ui.min.css" type="text/css">
+    <link rel="stylesheet" href="web2/css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="web2/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="web2/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="web2/css/style.css" type="text/css">
 
 
 </head>
 
 <body>
-   
+    <!-- preloader -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>    
     <!-- Offcanvas Menu Begin -->
     <div class="offcanvas-menu-overlay"></div>
     <div class="offcanvas-menu-wrapper">
@@ -53,7 +56,7 @@
     <!-- Offcanvas Menu End -->
 
     <!-- Header Section Begin -->
-   <?php include './web2/header.php' ?> 
+   <?php include './header.php' ?> 
     <!-- Header Section End -->
 
     <!-- Categories Section Begin -->
@@ -70,7 +73,7 @@
 Mỗi sản phẩm được thiết kế với chất liệu thoải mái, kiểu dáng tinh tế và phong cách đơn giản nhưng khác biệt, giúp bạn tự tin thể hiện cá tính mọi lúc, mọi nơi.
 
 Ashion – Không chỉ là áo thun, mà là phong cách sống.</strong></p>
-                        <a href="sanpham_nike.php">Mua ngay</a>
+                        <a href="./sanpham.php">Mua ngay</a>
                     </div>
                 </div>
             </div>
@@ -80,8 +83,7 @@ Ashion – Không chỉ là áo thun, mà là phong cách sống.</strong></p>
                         <div class="categories__item set-bg" data-setbg="img/categories/3.png">
                             <div class="categories__text">
                                 <h4>Áo sơ mi</h4>
-                                <p>13 items</p>
-                                <a href="./sanpham_adidas.php">Mua ngay</a>
+                                <a href="./sanpham.php">Mua ngay</a>
                             </div>
                         </div>
                     </div>
@@ -97,8 +99,7 @@ Ashion – Không chỉ là áo thun, mà là phong cách sống.</strong></p>
                         <div class="categories__item set-bg" data-setbg="img/categories/10.png">
                             <div class="categories__text">
                                 <h4>Áo khoác</h4>
-                                <p>159 items</p>
-                                <a href="sanpham_jordan.php">Mua ngay</a>
+                                <a href="sanpham.php">Mua ngay</a>
                             </div>
                         </div>
                     </div>
@@ -106,8 +107,7 @@ Ashion – Không chỉ là áo thun, mà là phong cách sống.</strong></p>
                         <div class="categories__item set-bg" data-setbg="img/categories/8.png">
                             <div class="categories__text">
                                 <h4>Áo vest</h4>
-                                <p>4 items</p>
-                                <a href="sanpham_nike.php">Shop now</a>
+                                <a href="sanpham.php">Shop now</a>
                             </div>
                         </div>
                     </div>
@@ -131,13 +131,13 @@ Ashion – Không chỉ là áo thun, mà là phong cách sống.</strong></p>
                     <div class="banner__item">
                         <div class="banner__text">
                             <h1>Thoải mái từng chuyển động – tự tin mọi khoảnh khắc.</h1>
-                            <a href="sanpham_nike.php">Mua ngay</a>
+                            <a href="sanpham.php">Mua ngay</a>
                         </div>
                     </div>
                     <div class="banner__item">
                         <div class="banner__text">
                             <h1>Bản lĩnh trong từng lớp vải – phong cách dẫn đầu</h1>
-                            <a href="sanpham_nike.php">Mua ngay</a>
+                            <a href="sanpham.php">Mua ngay</a>
                         </div>
                     </div>
                     <div class="banner__item">
@@ -372,16 +372,15 @@ Ashion – Không chỉ là áo thun, mà là phong cách sống.</strong></p>
 <!-- Search End -->
 
 <!-- Js Plugins -->
-<script src="js/jquery-3.3.1.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/jquery.magnific-popup.min.js"></script>
-<script src="js/jquery-ui.min.js"></script>
-<script src="js/mixitup.min.js"></script>
-<script src="js/jquery.countdown.min.js"></script>
-<script src="js/jquery.slicknav.js"></script>
-<script src="js/owl.carousel.min.js"></script>
-<script src="js/jquery.nicescroll.min.js"></script>
-<script src="js/main.js"></script>
-<script src="js/authen.js"></script>
+<script src="web2/js/jquery-3.3.1.min.js"></script>
+<script src="web2/js/bootstrap.min.js"></script>
+<script src="web2/js/jquery.magnific-popup.min.js"></script>
+<script src="web2/js/jquery-ui.min.js"></script>
+<script src="web2/js/mixitup.min.js"></script>
+<script src="web2/js/jquery.countdown.min.js"></script>
+<script src="web2/js/jquery.slicknav.js"></script>
+<script src="web2/js/owl.carousel.min.js"></script>
+<script src="web2/js/jquery.nicescroll.min.js"></script>
+<script src="web2/js/main.js"></script>
 </body>
 </html>
