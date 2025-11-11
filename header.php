@@ -70,8 +70,8 @@ if (isset($_SESSION['IDKH'])) {
             <a href="#" class="user-link"><img src="/web2/img/user-profile.png" width="45px"></img></a>        
             <div class="dropdown-menu" >                                  
                 <strong>Tài khoản: <span>' . htmlspecialchars($_SESSION["username"]) . '</span></strong>  
-                <button class="action-button" onclick=location.href="/web2/lichsudonhang.php">Lịch sử mua hàng</button>
-                <button class="action-button" onclick=location.href="/web2/chinhsuatt.php">Chỉnh sửa thông tin</button>
+                <button class="action-button" onclick=location.href="./lichsudonhang.php">Lịch sử mua hàng</button>
+                <button class="action-button" onclick=location.href="./chinhsuatt.php">Chỉnh sửa thông tin</button>
                 <button class="action-button logout" id="asa" onclick=showNotification()>Đăng Xuất</button>    
                     <script>
     // Wait for the DOM to load before attaching event listeners
@@ -81,7 +81,7 @@ if (isset($_SESSION['IDKH'])) {
         if (logoutButton) {
             logoutButton.addEventListener("click", function () {
                 if (confirm("Bạn có chắc chắn muốn đăng xuất không?")) {
-                    window.location.href = "/web2/dangxuat.php"; // Adjust this URL to your logout processing page
+                    window.location.href = "./dangxuat.php"; // Adjust this URL to your logout processing page
                 }
             });
         }

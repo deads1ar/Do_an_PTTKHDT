@@ -149,17 +149,9 @@ $totalPages = ceil($totalProducts / 9);
                     <?php include 'display_header.php'; ?>
                     <div class="row">
                         <?php
-//                         $limit = 6;
-//                         $offset = ($page - 1) * $limit;
-//                         $product = isset($_GET['product']) ? mysqli_real_escape_string($conn, $_GET['product']) : '';
-//                     $sql = "SELECT * FROM AO WHERE TRANGTHAI = 1 LIMIT $limit OFFSET $offset";
-// $result = $conn->query($sql);
-
-//                         $result = $conn->query($sql);
                          if (!empty($products)) {
-    foreach ($products as $row) {
-                               
-                   ?>
+                            foreach ($products as $row) {
+                        ?>
         <div class="col-lg-4 col-md-6">
             <div class="product__item">
                 <div class="product__item__pic">
@@ -201,7 +193,7 @@ $totalPages = ceil($totalProducts / 9);
 
         <script>
             function addToCart(productId, quantity) {
-                fetch('cart_handler.php', {
+                fetch('./cart_handler.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: `id=${productId}&quantity=${quantity}`
@@ -210,7 +202,7 @@ $totalPages = ceil($totalProducts / 9);
                 .then(data => {
                     if (data === "NOT_LOGGED_IN") {
                         alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng!");
-                        window.location.href = '/web2/dangnhap.html';
+                        window.location.href = './dangnhap.html';
                     } else if (data === "SUCCESS") {
                         alert("Thêm sản phẩm thành công!");
                     } else {

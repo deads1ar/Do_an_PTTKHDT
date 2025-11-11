@@ -1,31 +1,4 @@
 <?php
-// class Database {
-//     private $host = "localhost";
-//     private $user = "root";
-//     private $pass = "";
-//     private $dbname = "qlch";
-//     private $port = "3307";
-//     public $conn;
-
-//     public function __construct() {
-//         $this->connect();
-//     }
-
-//     private function connect() {
-//         $this->conn = new mysqli($this->host, $this->user, $this->pass, $this->dbname, $this->port);
-//         if ($this->conn->connect_error) {
-//             die("Database connection failed: " . $this->conn->connect_error);
-//         }
-//     }
-
-//     public function query($sql) {
-//         return $this->conn->query($sql);
-//     }
-
-//     public function escape($value) {
-//         return $this->conn->real_escape_string($value);
-//     }
-// }
 
 class Database {
     private $host = "localhost";
@@ -74,7 +47,7 @@ class Database {
             return $result->fetch_all(MYSQLI_ASSOC);
         }
 
-        return true; // For non-select queries (INSERT, UPDATE, DELETE)
+        return $this->conn->insert_id > 0 ? $this->conn->insert_id : true;  // For non-select queries (INSERT, UPDATE, DELETE)
     }
 
     public function close() {
