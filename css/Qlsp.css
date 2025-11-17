@@ -1,0 +1,79 @@
+.product__actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.product__actions button {
+    background-color: #f7f7f7; /* Nền nhạt */
+    color: #333; /* Màu chữ */
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Hiệu ứng khi di chuột */
+.product__actions button:hover {
+    background-color: #333; /* Nền đậm hơn */
+    color: #fff; /* Chữ trắng khi hover */
+}
+
+/* Định dạng cụ thể cho từng nút */
+.product__actions .edit-product {
+    background-color: #007bff;
+    color: white;
+    border: 1px solid #007bff;
+}
+
+.product__actions .edit-product:hover {
+    background-color: #0056b3;
+}
+
+.product__actions .delete-product {
+    background-color: #dc3545;
+    color: white;
+    border: 1px solid #dc3545;
+}
+
+.product__actions .delete-product:hover {
+    background-color: #c82333;
+}
+
+.product__actions .add-product {
+    background-color: #28a745;
+    color: white;
+    border: 1px solid #28a745;
+}
+
+.product__actions .add-product:hover {
+    background-color: #218838;
+}
+.add-product-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    margin-top: 20px;
+    height: 250px; /* Điều chỉnh chiều cao để phù hợp với các mục sản phẩm */
+}
+
+.add-product {
+    font-size: 1.2em;
+    padding: 10px 20px;
+    border: none;
+    background-color: #119206;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.add-product:hover {
+    background-color: #ff6347;
+}

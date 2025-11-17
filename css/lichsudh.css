@@ -1,0 +1,65 @@
+/* Bố cục bảng lịch sử mua hàng */
+.shop__cart__table table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    text-align: center;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(96, 90, 90, 0.1);
+}
+
+.shop__cart__table th, 
+.shop__cart__table td {
+    padding: 20px 23px;
+    border: 2px solid #000000;
+}
+
+.shop__cart__table th {
+    background-color: #ffffff;
+    color: rgb(36, 34, 34);
+    font-weight: bold;
+}
+
+.shop__cart__table tbody tr:nth-child(even) {
+    background-color: #f3f3f3;
+}
+
+.shop__cart__table tbody tr:hover {
+    background-color: #ececec;
+    cursor: pointer;
+}
+
+/* Trạng thái đơn hàng */
+.status {
+    display: inline-block;
+    padding: 5px 10px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.status.completed {
+    color: white;
+    background-color: #22b246de;
+}
+
+/* Nút xem chi tiết */
+.btn-detail {
+    text-decoration: none;
+    background-color: #ca1515;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-detail:hover {
+    background-color: #930000;
+    transform: scale(1.05);
+    color:#f9f9f9
+}
+/* lịch sử mua hàng */
