@@ -1,0 +1,47 @@
+/* Style for the container */
+.container {
+    width: 50%;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #add8e6; /* Màu xanh dương nhạt */
+}
+
+
+/* Style for the form labels */
+form label {
+    display: inline-block;
+    width: 150px; /* Adjust as needed */
+    margin-bottom: 10px;
+    font-weight: bold;
+    vertical-align: top; /* Align label at the top */
+}
+
+/* Style for the form inputs */
+form input[type="text"],
+form input[type="number"],
+form select,
+form textarea {
+    width: calc(100% - 160px); /* Adjusts based on label width */
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Button styling */
+form button {
+    padding: 10px 20px;
+    background-color: #1a1a1a9e;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #02c833d8;
+}

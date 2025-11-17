@@ -1,0 +1,86 @@
+
+body {
+    height: 100%;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+.order-container {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 90%;
+    margin: auto;
+}
+
+.order-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.order-header h1 {
+    font-size: 24px;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.order-header p {
+    margin: 0;
+    font-size: 14px;
+    color: #7f8c8d;
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 18px;
+    color: #34495e;
+    border-bottom: 2px solid #e5e5e5;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+table th, table td {
+    text-align: left;
+    padding: 10px;
+    border: 1px solid #e5e5e5;
+}
+
+table th {
+    background-color: #34495e;
+    color: #fff;
+}
+
+.total-row td {
+    font-weight: bold;
+    font-size: 16px;
+    color: #27ae60;
+}
+
+span {
+    font-weight: bold;
+}
+
+.product-item td {
+    text-align: center;
+}
+
+.product-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+}
