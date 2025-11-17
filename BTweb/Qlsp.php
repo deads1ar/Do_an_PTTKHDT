@@ -1,19 +1,61 @@
 <?php
-include 'db.php';
-include 'headerad.php';
-$stmt = $pdo->query("
-    SELECT sp.*, loaisp.TENLOAI, (SELECT COUNT(*) FROM ctdh WHERE ctdh.IDSP = sp.IDSP) as SOLD 
-    FROM sp 
-    JOIN loaisp ON sp.IDLSP = loaisp.IDLSP
-");
+session_start();
 
-$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?> 
+include 'db.php';
+include 'ProductManager.php';
+include 'headerad.php';
+
+$db = new Database();
+$pdo = $db->getConnection();
+$productManager = new ProductManager($pdo);
+
+// Nếu có tìm kiếm
+$products = [];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $keyword = $_POST['keyword'] ?? '';
+    $brands = $_POST['brand'] ?? [];
+    $min_price = intval($_POST['min_price'] ?? 1);
+    $max_price = intval($_POST['max_price'] ?? 2000000);
+    $products = $productManager->search($keyword, $brands, $min_price, $max_price);
+} else {
+    $products = $productManager->getAll();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <meta charset="UTF-8">
+    <meta name="description" content="Ashion Template">
+    <meta name="keywords" content="Ashion, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ashion with Fashion</title>
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cookie&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="css/jquery-ui.min.css" type="text/css">
+    <link rel="stylesheet" href="css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="css/style.css" type="text/css">
+
 <style>
+
+.product__item__pic .owl-carousel .owl-item img {
+            width: 100%;
+            height: 300px;
+            object-fit: contain;
+        }
+        .product__item__pic {
+            height: 300px;
+            overflow: hidden;
+        }
+
 .pagination {
     display: flex;
     justify-content: center;
@@ -60,7 +102,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <div class="sidebar__sizes">
                             <div class="section-title">
                                 <form id="filter-form" method="POST" action="search-results.php">
-                                    <input type="text" class="search-input" id="search-name" name="search_name" placeholder="Nhập tên sản phẩm">
+                                <input type="text" name="keyword" class="search-input" placeholder="Nhập tên sản phẩm" value="<?php echo isset($_GET['keyword']) ? htmlspecialchars($_GET['keyword']) : ''; ?>" style="margin-bottom: 20px;">
                                 </div>
                             </div>
                             <div class="sidebar__sizes">
@@ -69,38 +111,38 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 </div>
                                 <div class="size__list">
                                     <label for="nike">
-                                        Nike
-                                        <input type="checkbox" name="brands[]" value="Nike" id="nike">
+                                        Áo thun
+                                        <input type="checkbox" id="nike" name="brand[]" value="Áo thun" <?php echo (isset($_GET['brand']) && in_array('Áo thun', $_GET['brand'])) ? 'checked' : ''; ?>>
                                         <span class="checkmark"></span>
                                     </label>
                                     <label for="adidas">
-                                        Adidas
-                                        <input type="checkbox" name="brands[]" value="Adidas" id="adidas">
+                                        Áo sơ mi
+                                        <input type="checkbox" id="adidas" name="brand[]" value="Áo sơ mi" <?php echo (isset($_GET['brand']) && in_array('Áo sơ mi', $_GET['brand'])) ? 'checked' : ''; ?>>
                                         <span class="checkmark"></span>
                                     </label>
-                                    <label for="newbalance">
-                                        New Balance
-                                        <input type="checkbox" name="brands[]" value="New Balance" id="newbalance">
+                                    <label for="jordan">
+                                        Áo khoác
+                                        <input type="checkbox" id="jordan" name="brand[]" value="Áo khoác" <?php echo (isset($_GET['brand']) && in_array('Áo khoác', $_GET['brand'])) ? 'checked' : ''; ?>>
                                         <span class="checkmark"></span>
                                     </label>
                                 </div>
                             </div>
                             <div class="sidebar__filter">
-                                <div class="section-title">
-                                    <h4>TÌM THEO GIÁ</h4>
-                                </div>
-                                <div class="filter-range-wrap">
-                                    <div id="price-range" class="price-range" data-min="0" data-max="10000000"></div>
-                                    <div class="range-slider">
-                                        <div class="price-input">
-                                            <p>Giá:</p>
-                                            <input type="text" id="minamount" name="price_min" readonly>
-                                            <input type="text" id="maxamount" name="price_max" readonly>
+                                    <div class="section-title">
+                                        <h4>TÌM THEO GIÁ</h4>
+                                    </div>
+                                    <div class="filter-range-wrap">
+                                        <div class="price-range" id="price-range" data-min="1" data-max="2000000"></div>
+                                        <div class="range-slider">
+                                            <div class="price-input">
+                                                <p>Giá:</p>
+                                                <input style="text-align: center;" type="text" id="minamount" name="min_price" value="1" readonly>
+                                                <input style="text-align: center;" type="text" id="maxamount" name="max_price" value="2000000" readonly>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <button type="submit" id="apply-filter">Tìm</button>
+                            <button type="submit" id="apply-filter">Tìm Kiếm</button>
                         </form>
                     </div>
                 </div>
@@ -112,25 +154,30 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <a href="add-product.php"><button class="add-product">&#43; Thêm sản phẩm</button></a>
                 </div>
                     <div class="row">
-                    <?php foreach ($products as $product): ?>
-    <div class="col-lg-4 col-md-6">
-        <div class="product__item">
-            <div class="product__item__pic">
-                <img src="<?php echo htmlspecialchars($product['URL']); ?>" alt="<?php echo htmlspecialchars($product['TEN']); ?>" style="max-width: 100%; height: auto; object-fit: contain; max-height: 300px;">
-            </div>
-            <div class="product__item__text">
-                <h6><a href="#"><?php echo htmlspecialchars($product['TEN']); ?></a></h6>
-                <div class="product__price"><?php echo number_format($product['GIABANKM'], 0, ',', '.'); ?> đ <span><?php echo number_format($product['GIABAN'], 0, ',', '.'); ?> đ</span></div>
-                <div class="product__actions">
-                    <a href="edit-product.php?id=<?php echo $product['IDSP']; ?>"><button class="edit-product">&#9998; Sửa</button></a>
-                    <a href="delete-product.php?id=<?php echo $product['IDSP']; ?>" onclick="return confirmDelete(<?php echo $product['IDSP']; ?>)"><button class="delete-product">&#8722; Xóa</button></a>
-                </div>
-            </div>
-        </div>
-    </div>
-<?php endforeach; ?>
-                        <div class="col-lg-12">
-                        <div id="pagination-controls" class="pagination"></div>
+                        <?php foreach ($products as $product): ?>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="product__item">
+                            <div class="product__item__pic" style="<?= $product['TRANGTHAI'] === 'hidden' ? 'filter: grayscale(100%); opacity: 0.4;' : '' ?>">
+                                <img src="<?= htmlspecialchars($product['URL']) ?>" alt="<?= htmlspecialchars($product['TEN']) ?>">
+                            </div>
+                            <div class="product__item__text">
+                                <h6><a href="#"><?= htmlspecialchars($product['TEN']); ?></a></h6>
+                                <div class="product__price"><?= number_format($product['GIA'], 0, ',', '.') ?> đ</div>
+                                <div class="product__actions">
+                                    <a href="edit-product.php?id=<?= $product['IDAO']; ?>"><button class="edit-product">✎ Sửa</button></a>
+                                    <?php if ($product['TRANGTHAI'] === 'hidden'): ?>
+                                        <a href="unhide-product.php?id=<?= $product['IDAO']; ?>"><button class="delete-product" style="background:gray;">👁 Hiện lại</button></a>
+                                    <?php else: ?>
+                                        <a href="delete-product.php?id=<?= $product['IDAO']; ?>"><button class="delete-product">Ẩn</button></a>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                                    
+                        </div>
+                        <?php endforeach; ?>
+                            <div class="col-lg-12">
+                            <div id="pagination-controls" class="pagination"></div>
                         </div>
                     </div>
                 </div>
@@ -149,11 +196,11 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script>
         function confirmDelete(id) {
             <?php
-            $stmt = $pdo->prepare("SELECT COUNT(*) FROM ctdh WHERE IDSP = ?");
+            $stmt = $pdo->prepare("SELECT COUNT(*) FROM ctdh WHERE IDAO = ?");
             foreach ($products as $product) {
-                $stmt->execute([$product['IDSP']]);
+                $stmt->execute([$product['IDAO']]);
                 $sold = $stmt->fetchColumn();
-                echo "if (id == {$product['IDSP']} && $sold > 0) { return confirm('Sản phẩm đã được bán. Bạn có muốn ẩn nó không?'); }";
+                echo "if (id == {$product['IDAO']} && $sold > 0) { return confirm('Sản phẩm đã được bán. Bạn có muốn ẩn nó không?'); }";
             }
             ?>
             return confirm('Bạn có chắc muốn xóa sản phẩm này không?');
@@ -162,74 +209,94 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script>
         function confirmDelete(id) {
             <?php
-            $stmt = $pdo->prepare("SELECT COUNT(*) FROM ctdh WHERE IDSP = ?");
+            $stmt = $pdo->prepare("SELECT COUNT(*) FROM ctdh WHERE IDAO = ?");
             foreach ($products as $product) {
-                $stmt->execute([$product['IDSP']]);
+                $stmt->execute([$product['IDAO']]);
                 $sold = $stmt->fetchColumn();
-                echo "if (id == {$product['IDSP']} && $sold > 0) { return confirm('Sản phẩm đã được bán. Bạn có muốn ẩn nó không?'); }";
+                echo "if (id == {$product['IDAO']} && $sold > 0) { return confirm('Sản phẩm đã được bán. Bạn có muốn ẩn nó không?'); }";
             }
             ?>
             return confirm('Bạn có chắc muốn xóa sản phẩm này không?');
         }
 
-        $(document).ready(function() {
-            // Khởi tạo thanh trượt giá
-            $("#price-range").slider({
-                range: true,
-                min: 0,
-                max: 10000000,
-                values: [0, 10000000],
-                slide: function(event, ui) {
-                    $("#minamount").val(ui.values[0]);
-                    $("#maxamount").val(ui.values[1]);
-                }
-            });
-            $("#minamount").val($("#price-range").slider("values", 0));
-            $("#maxamount").val($("#price-range").slider("values", 1));
+      $(document).ready(function() {
+    // Format number function
+    function formatNumber(number) {
+        return number + " đ";
+    }
 
-            // Phân trang
-            const products = document.querySelectorAll(".product__item");
-            const productsPerPage = 6;
-            const totalProducts = products.length;
-            const totalPages = Math.ceil(totalProducts / productsPerPage);
-            let currentPage = 1;
+    // Get min_price and max_price from URL or default
+    var minPrice = <?php echo isset($_GET['min_price']) ? (int)$_GET['min_price'] : 1; ?>;
+    var maxPrice = <?php echo isset($_GET['max_price']) ? (int)$_GET['max_price'] : 2000000; ?>;
+    minPrice = Math.max(1, Math.min(minPrice, 2000000));
+    maxPrice = Math.max(minPrice, Math.min(maxPrice, 2000000));
 
-            function showPage(page) {
-                products.forEach((product, index) => {
-                    product.style.display = (index >= (page - 1) * productsPerPage && index < page * productsPerPage) ? "block" : "none";
-                });
-                updatePagination(page);
-            }
+    // Set the initial values for the input fields
+    $("#minamount").val(formatNumber(minPrice));
+    $("#maxamount").val(formatNumber(maxPrice));
 
-            function updatePagination(activePage) {
-                const paginationContainer = document.getElementById("pagination-controls");
-                paginationContainer.innerHTML = "";
+    // Initialize the price slider
+    $("#price-range").slider({
+        range: true,
+        min: 1,
+        max: 2000000,
+        values: [minPrice, maxPrice],
+        slide: function(event, ui) {
+            $("#minamount").val(formatNumber(ui.values[0]));
+            $("#maxamount").val(formatNumber(ui.values[1]));
+        }
+    });
+});
 
-                if (totalPages > 1) {
-                    if (activePage > 1) {
-                        paginationContainer.innerHTML += `<a href="#" data-page="${activePage - 1}">« Trước</a>`;
-                    }
 
-                    for (let i = 1; i <= totalPages; i++) {
-                        paginationContainer.innerHTML += `<a href="#" data-page="${i}" class="${i === activePage ? 'active' : ''}">${i}</a>`;
-                    }
 
-                    if (activePage < totalPages) {
-                        paginationContainer.innerHTML += `<a href="#" data-page="${activePage + 1}">Tiếp »</a>`;
-                    }
-                }
+    // Pagination for product items
+    $(document).ready(function() {
+    // Phân trang cho sản phẩm
+    const products = document.querySelectorAll(".product__item");
+    const productsPerPage = 6;
+    const totalProducts = products.length;
+    const totalPages = Math.ceil(totalProducts / productsPerPage);
+    let currentPage = 1;
 
-                document.querySelectorAll("#pagination-controls a").forEach(link => {
-                    link.addEventListener("click", function(e) {
-                        e.preventDefault();
-                        currentPage = parseInt(this.getAttribute("data-page"));
-                        showPage(currentPage);
-                    });
-                });
-            }
-
-            showPage(currentPage);
+    function showPage(page) {
+        products.forEach((product, index) => {
+            product.style.display = (index >= (page - 1) * productsPerPage && index < page * productsPerPage) ? "block" : "none";
         });
+        updatePagination(page);
+    }
+
+    function updatePagination(activePage) {
+        const paginationContainer = document.getElementById("pagination-controls");
+        paginationContainer.innerHTML = "";
+
+        if (totalPages > 1) {
+            if (activePage > 1) {
+                paginationContainer.innerHTML += `<a href="#" data-page="${activePage - 1}">« Trước</a>`;
+            }
+
+            for (let i = 1; i <= totalPages; i++) {
+                paginationContainer.innerHTML += `<a href="#" data-page="${i}" class="${i === activePage ? 'active' : ''}">${i}</a>`;
+            }
+
+            if (activePage < totalPages) {
+                paginationContainer.innerHTML += `<a href="#" data-page="${activePage + 1}">Tiếp »</a>`;
+            }
+        }
+
+        document.querySelectorAll("#pagination-controls a").forEach(link => {
+            link.addEventListener("click", function(e) {
+                e.preventDefault();
+                currentPage = parseInt(this.getAttribute("data-page"));
+                showPage(currentPage);
+            });
+        });
+    }
+
+    // Hiển thị trang đầu tiên
+    showPage(currentPage);
+});
+
     </script>
 
 

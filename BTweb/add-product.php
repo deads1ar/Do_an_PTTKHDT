@@ -1,54 +1,60 @@
 <?php
-include 'db.php';
+session_start();
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $idlsp = $_POST['idlsp'];
-    $ten = $_POST['ten'];
-    $mota = $_POST['mota'];
+include 'db.php';
+include 'ProductManager.php';
+include 'CategoryManager.php';
+include 'SizeManager.php';
+
+$db = new Database();
+$pdo = $db->getConnection();
+
+$productManager = new ProductManager($pdo);
+$categoryManager = new CategoryManager($pdo);
+$sizeManager = new SizeManager($pdo);
+
+// Lấy dữ liệu danh mục + size
+$categories = $categoryManager->getAll();
+$sizes = $sizeManager->getAll();
+
+// Xử lý thêm sản phẩm
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $idlsp  = $_POST['idlsp'];
+    $ten    = $_POST['ten'];
+    $mota   = $_POST['mota'];
     $giaban = $_POST['giaban'];
-    $giabankm = $_POST['giabankm'];
+    $idsize = $_POST['idsize'];
     $image_source = $_POST['image_source'];
 
-    // Generate new IDSP
-    $stmt = $pdo->query("SELECT MAX(IDSP) as max_id FROM sp");
-    $max_id = $stmt->fetch(PDO::FETCH_ASSOC)['max_id'];
-    $new_id_num = $max_id ? (int)substr($max_id, 2) + 1 : 1;
-    $idsp = "SP" . sprintf("%03d", $new_id_num);
-
-    // Validate category
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM loaisp WHERE IDLSP = ?");
-    $stmt->execute([$idlsp]);
-    if ($stmt->fetchColumn() == 0) {
-        die("Invalid category ID.");
-    }
-
-    // Handle image
+    // Upload hoặc nhập URL ảnh
     $image_url = '';
-    if ($image_source === 'file' && !empty($_FILES["image"]["name"])) {
+    if ($image_source === 'file' && !empty($_FILES['image']['name'])) {
         $target_dir = "img/shop/";
+        if (!is_dir($target_dir)) mkdir($target_dir, 0755, true);
         $image_name = basename($_FILES["image"]["name"]);
         $target_file = $target_dir . $image_name;
         if (!move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-            die("Error: Failed to upload image.");
+            die("❌ Không thể tải ảnh lên.");
         }
         $image_url = $target_file;
     } elseif ($image_source === 'url' && !empty($_POST['image_url'])) {
         $image_url = $_POST['image_url'];
     } else {
-        die("Error: No image provided.");
+        die("❌ Bạn cần cung cấp ảnh sản phẩm.");
     }
 
-    // Insert new product
-    $stmt = $pdo->prepare("INSERT INTO sp (IDSP, TEN, MOTA, GIABAN, GIABANKM, URL, IDLSP) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt->execute([$idsp, $ten, $mota, $giaban, $giabankm, $image_url, $idlsp]);
+    // Kiểm tra loại sản phẩm tồn tại
+    if (!$categoryManager->exists($idlsp)) {
+        die("❌ Loại sản phẩm không hợp lệ!");
+    }
 
+    // Thêm sản phẩm qua class ProductManager
+    $result = $productManager->add($idlsp, $ten, $mota, $giaban, $idsize, $image_url);
+
+    // Quay lại trang quản lý
     header("Location: Qlsp.php");
     exit;
 }
-
-// Fetch categories
-$result = $pdo->query("SELECT * FROM loaisp");
-$categories = $result->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -68,7 +74,7 @@ $categories = $result->fetchAll(PDO::FETCH_ASSOC);
                 <label>Phân loại</label>
                 <select name="idlsp" class="form-control" required>
                     <?php foreach ($categories as $category): ?>
-                        <option value="<?php echo $category['IDLSP']; ?>"><?php echo $category['TENLOAI']; ?></option>
+                        <option value="<?php echo $category['IDLOAI']; ?>"><?php echo $category['TENLOAI']; ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -77,16 +83,20 @@ $categories = $result->fetchAll(PDO::FETCH_ASSOC);
                 <input type="text" name="ten" class="form-control" required>
             </div>
             <div class="form-group">
+                <label for="idsize">Chọn kích thước</label>
+                <select name="idsize" class="form-control" required>
+                    <?php foreach ($sizes as $size): ?>
+                        <option value="<?= $size['IDSIZE']; ?>"><?= $size['TENSIZE']; ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="form-group">
                 <label>Mô tả</label>
                 <textarea name="mota" class="form-control" required></textarea>
             </div>
             <div class="form-group">
                 <label>Giá bán</label>
                 <input type="number" name="giaban" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label>Giá bán khuyến mãi</label>
-                <input type="number" name="giabankm" class="form-control" required>
             </div>
             <div class="form-group">
                 <label>Hình ảnh</label>

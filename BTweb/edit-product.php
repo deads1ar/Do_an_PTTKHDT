@@ -1,39 +1,51 @@
 <?php
+
 include 'db.php';
+include 'ProductManager.php';
 
-$id = $_GET['id'];
-$stmt = $pdo->prepare("SELECT * FROM sp WHERE IDSP = ?");
-$stmt->execute([$id]);
-$product = $stmt->fetch(PDO::FETCH_ASSOC);
+$db = new Database();
+$pdo = $db->getConnection();
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $idlsp = $_POST['idlsp'];
-    $ten = $_POST['ten'];
-    $mota = $_POST['mota'];
-    $giaban = $_POST['giaban'];
-    $giabankm = $_POST['giabankm'];
-    $image_source = $_POST['image_source'];
+$productManager = new ProductManager($pdo);
 
-    $url = $product['URL'];
-    if ($image_source === 'file' && !empty($_FILES["image"]["name"])) {
-        $target_dir = "img/shop/";
-        $image_name = basename($_FILES["image"]["name"]);
-        $url = $target_dir . $image_name;
-        move_uploaded_file($_FILES["image"]["tmp_name"], $url);
-    } elseif ($image_source === 'url' && !empty($_POST['image_url'])) {
-        $url = $_POST['image_url'];
-    }
-
-    $stmt = $pdo->prepare("UPDATE sp SET IDLSP = ?, URL = ?, TEN = ?, MOTA = ?, GIABAN = ?, GIABANKM = ? WHERE IDSP = ?");
-    $stmt->execute([$idlsp, $url, $ten, $mota, $giaban, $giabankm, $id]);
-
+// Nếu là POST thì cập nhật
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id = $_GET['id'];
+    $data = [
+        'idlsp'   => $_POST['idlsp'],
+        'ten'     => $_POST['ten'],
+        'mota'    => $_POST['mota'],
+        'giaban'  => $_POST['giaban'],
+        'idsize'  => $_POST['idsize'],
+        'image_source' => $_POST['image_source'],
+        'image'   => $_FILES['image'],
+        'image_url' => $_POST['image_url'] ?? '',
+    ];
+    
+    $productManager->update($id, $data);
     header("Location: Qlsp.php");
     exit;
 }
 
-$stmt = $pdo->query("SELECT * FROM loaisp");
-$categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// ✅ Nếu là GET, cần lấy sản phẩm để hiển thị
+$id = $_GET['id'] ?? null;
+if (!$id) {
+    die("❌ Không có ID sản phẩm.");
+}
+$product = $productManager->getById($id);
+if (!$product) {
+    die("❌ Sản phẩm không tồn tại.");
+}
+
+// Gọi giao diện
+include 'headerad.php';
+include 'SizeManager.php';
+include 'CategoryManager.php';
+
+$sizes = (new SizeManager($pdo))->getAll();
+$categories = (new CategoryManager($pdo))->getAll();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="zxx">
@@ -52,7 +64,7 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <label>Phân loại</label>
                 <select name="idlsp" class="form-control" required>
                     <?php foreach ($categories as $category): ?>
-                        <option value="<?php echo $category['IDLSP']; ?>" <?php if ($category['IDLSP'] == $product['IDLSP']) echo 'selected'; ?>><?php echo $category['TENLOAI']; ?></option>
+                        <option value="<?php echo $category['IDLOAI']; ?>" <?php if ($category['IDLOAI'] == $product['IDLOAI']) echo 'selected'; ?>><?php echo $category['TENLOAI']; ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -61,16 +73,34 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <input type="text" name="ten" class="form-control" value="<?php echo htmlspecialchars($product['TEN']); ?>" required>
             </div>
             <div class="form-group">
+                <label>Loại Size</label>
+                <select name="idsize" class="form-control" required>
+                    <?php foreach ($sizes as $size): ?>
+                        <option value="<?= $size['IDSIZE']; ?>" <?php if ($size['IDSIZE'] == $product['IDSIZE']) echo 'selected'; ?>>
+                            <?= $size['TENSIZE']; ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <label>Loại Size</label><br>
+                    <?php foreach ($sizes as $size): ?>
+                        <label style="margin-right: 10px;">
+                            <input 
+                                type="checkbox" 
+                                name="idsize[]" 
+                                value="<?= $size['IDSIZE']; ?>" 
+                                <?php if (($size['IDSIZE'] == )) echo 'checked'; ?>
+                            >
+                            <?= $size['TENSIZE']; ?>
+                        </label>
+                    <?php endforeach; ?>
+            </div>
+            <div class="form-group">
                 <label>Mô tả</label>
                 <textarea name="mota" class="form-control" required><?php echo htmlspecialchars($product['MOTA']); ?></textarea>
             </div>
             <div class="form-group">
                 <label>Giá bán</label>
-                <input type="number" name="giaban" class="form-control" value="<?php echo $product['GIABAN']; ?>" required>
-            </div>
-            <div class="form-group">
-                <label>Giá bán khuyến mãi</label>
-                <input type="number" name="giabankm" class="form-control" value="<?php echo $product['GIABANKM']; ?>" required>
+                <input type="number" name="giaban" class="form-control" value="<?php echo $product['GIA']; ?>" required>
             </div>
             <div class="form-group">
                 <label>Hình ảnh hiện tại</label>

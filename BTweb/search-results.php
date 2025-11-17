@@ -1,48 +1,26 @@
 <?php
+session_start();
+
 include 'db.php';
+include 'ProductManager.php'; // Nếu nằm trong folder classes
 include 'headerad.php';
 
-// Nhận dữ liệu tìm kiếm từ form
-$search_name = isset($_POST['search_name']) ? trim($_POST['search_name']) : '';
-$brands = isset($_POST['brands']) && is_array($_POST['brands']) ? $_POST['brands'] : [];
-$price_min = isset($_POST['price_min']) ? max(0, (int)$_POST['price_min']) : 0;
-$price_max = isset($_POST['price_max']) ? max(0, (int)$_POST['price_max']) : 10000000;
+// Khởi tạo kết nối
+$db = new Database();
+$pdo = $db->getConnection();
+$productManager = new ProductManager($pdo);
 
-// Đảm bảo price_max >= price_min
-if ($price_max < $price_min) {
-    $temp = $price_max;
-    $price_max = $price_min;
-    $price_min = $temp;
-}
+// Nhận dữ liệu từ form POST
+$search_name = $_POST['keyword'] ?? '';
+$brands = $_POST['brand'] ?? [];
+$price_min = max(0, (int)($_POST['min_price'] ?? 0));
+$price_max = max($price_min, (int)($_POST['max_price'] ?? 10000000));
 
-// Xây dựng truy vấn SQL
-$sql = "
-    SELECT sp.*, loaisp.TENLOAI, (SELECT COUNT(*) FROM ctdh WHERE ctdh.IDSP = sp.IDSP) as SOLD 
-    FROM sp 
-    JOIN loaisp ON sp.IDLSP = loaisp.IDLSP
-    WHERE 1=1
-";
-$params = [];
-
-if (!empty($search_name)) {
-    $sql .= " AND sp.TEN LIKE ?";
-    $params[] = "%$search_name%";
-}
-
-if (!empty($brands)) {
-    $placeholders = implode(',', array_fill(0, count($brands), '?'));
-    $sql .= " AND loaisp.TENLOAI IN ($placeholders)";
-    $params = array_merge($params, $brands);
-}
-
-$sql .= " AND sp.GIABANKM BETWEEN ? AND ?";
-$params[] = $price_min;
-$params[] = $price_max;
-
-$stmt = $pdo->prepare($sql);
-$stmt->execute($params);
-$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Gọi phương thức search
+$products = $productManager->search($search_name, $brands, $price_min, $price_max);
 ?>
+
+
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
@@ -295,15 +273,23 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     : 'images/default-product.jpg'; // Ảnh mặc định nếu không có URL
                                 ?>
                                 <div class="col-lg-4 col-md-6 product__item">
-                                    <div class="product__item__pic">
+                                    <div class="product__item__pic" style="<?= $product['TRANGTHAI'] === 'hidden' ? 'filter: grayscale(100%); opacity: 0.4;' : '' ?>">
                                         <img src="<?php echo $image_url; ?>" alt="<?php echo htmlspecialchars($product['TEN']); ?>">
                                     </div>
                                     <div class="product__item__text">
                                         <h6><a href="#"><?php echo htmlspecialchars($product['TEN']); ?></a></h6>
-                                        <div class="product__price"><?php echo number_format($product['GIABANKM'], 0, ',', '.'); ?> đ <span><?php echo number_format($product['GIABAN'], 0, ',', '.'); ?> đ</span></div>
-                                        <div class="product__actions">
-                                            <a href="edit-product.php?id=<?php echo htmlspecialchars($product['IDSP']); ?>"><button class="edit-product">✎ Sửa</button></a>
-                                            <a href="delete-product.php?id=<?php echo htmlspecialchars($product['IDSP']); ?>" onclick="return confirmDelete('<?php echo htmlspecialchars($product['IDSP']); ?>')"><button class="delete-product">− Xóa</button></a>
+                                        <div class="product__price"><?php echo number_format($product['GIA'], 0, ',', '.'); ?> đ <span><?php echo number_format($product['GIA'], 0, ',', '.'); ?> đ</span></div>
+                                            <div class="product__actions">
+                                                <a href="edit-product.php?id=<?php echo htmlspecialchars($product['IDAO']); ?>"><button class="edit-product">✎ Sửa</button></a>
+                                            <?php if ($product['TRANGTHAI'] === 'hidden'): ?>
+                                                <a href="unhide-product.php?id=<?= $product['IDAO']; ?>" onclick="return confirm('Bạn có muốn hiện lại sản phẩm này không?');">
+                                                    <button class="delete-product" style="background: gray;">👁 Hiện lại</button>
+                                                </a>
+                                            <?php else: ?>
+                                                <a href="delete-product.php?id=<?= $product['IDAO']; ?>" onclick="return confirmDelete('<?= $product['IDAO']; ?>')">
+                                                    <button class="delete-product">Ẩn</button>
+                                                </a>
+                                            <?php endif; ?>                                        
                                         </div>
                                     </div>
                                 </div>
@@ -325,16 +311,14 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script>
         function confirmDelete(id) {
-            <?php
-            $stmt = $pdo->prepare("SELECT COUNT(*) FROM ctdh WHERE IDSP = ?");
-            foreach ($products as $product) {
-                $stmt->execute([$product['IDSP']]);
-                $sold = $stmt->fetchColumn();
-                echo "if (id === '" . htmlspecialchars($product['IDSP']) . "' && $sold > 0) { return confirm('Sản phẩm đã được bán. Bạn có muốn ẩn nó không?'); }";
-            }
-            ?>
+                        <?php foreach ($products as $product): ?>
+                <?php $sold = $productManager->isSold($product['IDAO']); ?>
+                if (id === '<?php echo $product['IDAO']; ?>' && <?php echo $sold ? 'true' : 'false'; ?>) {
+                    return confirm('Sản phẩm đã được bán. Bạn có muốn ẩn nó không?');
+                }
+            <?php endforeach; ?>
             return confirm('Bạn có chắc muốn xóa sản phẩm này không?');
-        }
+            }
 
         document.addEventListener("DOMContentLoaded", function() {
             const products = document.querySelectorAll(".product__item");
@@ -380,5 +364,8 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
             showPage(currentPage);
         });
     </script>
+<!-- <pre><?php print_r($params); ?></pre> -->
+
+
 </body>
 </html>
