@@ -1,54 +1,68 @@
 <?php
+session_start();
+
 include 'db.php';
+include 'ProductManager.php';
+include 'CategoryManager.php';
+include 'SizeManager.php';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $idlsp = $_POST['idlsp'];
-    $ten = $_POST['ten'];
-    $mota = $_POST['mota'];
-    $giaban = $_POST['giaban'];
-    $giabankm = $_POST['giabankm'];
-    $image_source = $_POST['image_source'];
+$db = new Database();
+$pdo = $db->getConnection();
 
-    // Generate new IDSP
-    $stmt = $pdo->query("SELECT MAX(IDSP) as max_id FROM sp");
-    $max_id = $stmt->fetch(PDO::FETCH_ASSOC)['max_id'];
-    $new_id_num = $max_id ? (int)substr($max_id, 2) + 1 : 1;
-    $idsp = "SP" . sprintf("%03d", $new_id_num);
+$productManager = new ProductManager($pdo);
+$categoryManager = new CategoryManager($pdo);
+$sizeManager = new SizeManager($pdo);
 
-    // Validate category
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM loaisp WHERE IDLSP = ?");
-    $stmt->execute([$idlsp]);
-    if ($stmt->fetchColumn() == 0) {
-        die("Invalid category ID.");
-    }
+$categories = $categoryManager->getAll();
+$sizes = $sizeManager->getAll();
 
-    // Handle image
+$error = '';
+$success = '';
+$idlsp = $ten = $mota = $giaban = $image_url = '';
+$idsize = [];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $idlsp  = $_POST['idlsp'] ?? '';
+    $ten    = $_POST['ten'] ?? '';
+    $mota   = $_POST['mota'] ?? '';
+    $giaban = $_POST['giaban'] ?? '';
+    $idsize = $_POST['idsize'] ?? [];
+    $image_source = $_POST['image_source'] ?? '';
     $image_url = '';
-    if ($image_source === 'file' && !empty($_FILES["image"]["name"])) {
-        $target_dir = "img/shop/";
-        $image_name = basename($_FILES["image"]["name"]);
-        $target_file = $target_dir . $image_name;
-        if (!move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-            die("Error: Failed to upload image.");
-        }
-        $image_url = $target_file;
-    } elseif ($image_source === 'url' && !empty($_POST['image_url'])) {
-        $image_url = $_POST['image_url'];
-    } else {
-        die("Error: No image provided.");
+
+    if (empty($idsize)) {
+        $error = "❌ Vui lòng chọn ít nhất một size!";
     }
 
-    // Insert new product
-    $stmt = $pdo->prepare("INSERT INTO sp (IDSP, TEN, MOTA, GIABAN, GIABANKM, URL, IDLSP) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt->execute([$idsp, $ten, $mota, $giaban, $giabankm, $image_url, $idlsp]);
+    if (!$error) {
+        if ($image_source === 'file' && !empty($_FILES['image']['name'])) {
+            $target_dir = "img/shop/";
+            if (!is_dir($target_dir)) mkdir($target_dir, 0755, true);
+            $image_name = basename($_FILES["image"]["name"]);
+            $target_file = $target_dir . $image_name;
+            if (!move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                $error = "❌ Không thể tải ảnh lên.";
+            } else {
+                $image_url = $target_file;
+            }
+        } elseif ($image_source === 'url' && !empty($_POST['image_url'])) {
+            $image_url = $_POST['image_url'];
+        } else {
+            $error = "❌ Bạn cần cung cấp ảnh sản phẩm.";
+        }
+    }
 
-    header("Location: Qlsp.php");
-    exit;
+    if (!$error && !$categoryManager->exists($idlsp)) {
+        $error = "❌ Loại sản phẩm không hợp lệ!";
+    }
+
+    if (!$error) {
+        $productManager->add($idlsp, $ten, $mota, $giaban, $idsize, $image_url);
+        header("Location: Qlsp.php"); // ✅ redirect ngay sau khi thêm
+        exit;
+    }
+
 }
-
-// Fetch categories
-$result = $pdo->query("SELECT * FROM loaisp");
-$categories = $result->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -56,38 +70,63 @@ $categories = $result->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <title>Thêm sản phẩm</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="css/style.css" type="text/css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <section class="shop spad">
     <div class="container">
         <h2>Thêm sản phẩm</h2>
+
+        <?php if (!empty($error)): ?>
+            <div class="alert alert-danger"><?= $error ?></div>
+        <?php endif; ?>
+        <?php if (!empty($success)): ?>
+            <div class="alert alert-success"><?= $success ?></div>
+        <?php endif; ?>
+
         <form method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label>Phân loại</label>
                 <select name="idlsp" class="form-control" required>
                     <?php foreach ($categories as $category): ?>
-                        <option value="<?php echo $category['IDLSP']; ?>"><?php echo $category['TENLOAI']; ?></option>
+                        <option value="<?= $category['IDLOAI']; ?>" <?= $category['IDLOAI'] == $idlsp ? 'selected' : '' ?>>
+                            <?= $category['TENLOAI']; ?>
+                        </option>
                     <?php endforeach; ?>
                 </select>
             </div>
+
             <div class="form-group">
                 <label>Tên sản phẩm</label>
-                <input type="text" name="ten" class="form-control" required>
+                <input type="text" name="ten" class="form-control" required value="<?= htmlspecialchars($ten) ?>">
             </div>
+
+            <div class="form-group">
+                <label>Loại Size</label><br>
+                <?php foreach ($sizes as $size): ?>
+                    <label style="margin-right: 10px;">
+                        <input 
+                            type="checkbox" 
+                            name="idsize[]" 
+                            value="<?= $size['IDSIZE']; ?>" 
+                            <?= in_array($size['IDSIZE'], $idsize) ? 'checked' : '' ?>
+                        >
+                        <?= $size['TENSIZE']; ?>
+                    </label>
+                <?php endforeach; ?>
+            </div>
+
             <div class="form-group">
                 <label>Mô tả</label>
-                <textarea name="mota" class="form-control" required></textarea>
+                <textarea name="mota" class="form-control" required><?= htmlspecialchars($mota) ?></textarea>
             </div>
+
             <div class="form-group">
                 <label>Giá bán</label>
-                <input type="number" name="giaban" class="form-control" required>
+                <input type="number" name="giaban" class="form-control" required value="<?= htmlspecialchars($giaban) ?>">
             </div>
-            <div class="form-group">
-                <label>Giá bán khuyến mãi</label>
-                <input type="number" name="giabankm" class="form-control" required>
-            </div>
+
             <div class="form-group">
                 <label>Hình ảnh</label>
                 <div>
@@ -98,17 +137,17 @@ $categories = $result->fetchAll(PDO::FETCH_ASSOC);
                     <input type="file" name="image" id="image" class="form-control" accept="image/*" onchange="previewImage(event)">
                 </div>
                 <div id="url-input" style="display: none;">
-                    <input type="url" name="image_url" id="image_url" class="form-control" placeholder="Nhập URL ảnh">
+                    <input type="url" name="image_url" id="image_url" class="form-control" placeholder="Nhập URL ảnh" value="<?= htmlspecialchars($image_url) ?>">
                 </div>
                 <img id="image-preview" style="max-width: 200px; margin-top: 10px; display: none;" />
             </div>
+
             <button type="submit" class="btn btn-primary">Thêm</button>
             <a href="Qlsp.php" class="btn btn-secondary">Hủy</a>
         </form>
     </div>
 </section>
 
-<script src="js/jquery-3.3.1.min.js"></script>
 <script>
     function toggleImageInput() {
         const fileInput = document.getElementById('file-input');

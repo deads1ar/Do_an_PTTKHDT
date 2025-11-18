@@ -1,7 +1,13 @@
 <?php
+session_start();
+
 include 'db.php';
 include 'headerad.php';
-?> 
+
+$db = new Database();
+$pdo = $db->getConnection();
+?>
+
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
@@ -39,6 +45,7 @@ include 'headerad.php';
                                 <th>Tên</th>
                                 <th>SĐT</th>
                                 <th>Mật khẩu</th>
+
                                 <th>Địa chỉ</th>
                                 <th>Trạng thái</th>
                                 <th>Hành động</th>
@@ -76,7 +83,7 @@ include 'headerad.php';
                 <input type="hidden" id="edit-id">
                 <label>Tên:</label><input type="text" id="edit-name" required><br><br>
                 <label>SĐT:</label><input type="text" id="edit-phone" required><br><br>
-                <label>Mật khẩu:</label><input type="password" id="edit-password"required ><br><br>
+                <label>Mật khẩu:</label><input type="password" id="edit-password" ><br><br>
                 <label>Địa chỉ:</label><input type="text" id="edit-diachi" required><br><br>
                 <button type="submit" class="add-product">Lưu</button>
             </form>
@@ -102,15 +109,15 @@ include 'headerad.php';
                 tableBody.append(`
                     <tr>
                         <td>${index + 1}</td>
-                        <td>${user.NAME}</td>
+                        <td>${user.TEN}</td>
                         <td>${user.SDT}</td>
                        <td>************</td>
-                        <td>${user.DC}</td>
-                        <td>${user.STATUS}</td>
+                        <td>${user.DIACHI}</td>
+                        <td>${user.TRANGTHAI == '1' ? 'hoạt động' : 'đang khóa'}</td>
                         <td>
                             <button class="btn btn-primary btn-sm" onclick="openEditModal('${user.IDKH}')">Sửa</button>
-                            <button class="btn ${user.STATUS === 'Available' ? 'btn-lock' : 'btn-unlock'} btn-sm" 
-                                    onclick="toggleLock('${user.IDKH}')">${user.STATUS === 'Available' ? 'Khóa' : 'Mở'}</button>
+                            <button class="btn ${user.TRANGTHAI == 1 ? 'btn-lock' : 'btn-unlock'} btn-sm" 
+                                    onclick="toggleLock('${user.IDKH}')">${user.TRANGTHAI == 1 ? 'Khóa' : 'Mở'}</button>
                         </td>
                     </tr>
                 `);
@@ -147,12 +154,12 @@ include 'headerad.php';
         // Sửa user
         function openEditModal(id) {
             $.get("users.php?action=list", function(data) {
-                const user = data.find(u => u.IDKH === id);
+                const user = data.find(u => u.IDKH == id);
                 $("#edit-id").val(user.IDKH);
-                $("#edit-name").val(user.NAME);
+                $("#edit-name").val(user.TEN);
                 $("#edit-phone").val(user.SDT);
                 $("#edit-password").val();
-                $("#edit-diachi").val(user.DC);
+                $("#edit-diachi").val(user.DIACHI);
                 $("#editModal").show();
             }, "json");
         }

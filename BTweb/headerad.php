@@ -1,4 +1,15 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Chặn truy cập nếu chưa đăng nhập (trừ khi đang ở login.php)
+$currentFile = basename($_SERVER['PHP_SELF']);
+$allowWithoutLogin = ['login.php', 'logout.php'];
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+    header('Location: login.php'); // or wherever your login page is
+    exit;
+}
 $current_page = basename($_SERVER['SCRIPT_NAME']);
 ?>
 <!DOCTYPE html>
@@ -23,7 +34,7 @@ $current_page = basename($_SERVER['SCRIPT_NAME']);
     <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
 </head>
 <body>
-<header class="header">
+    <header class="header">
     <div class="container-fluid">
         <div class="row align-items-center">
             <div class="col-xl-3 col-lg-2">
@@ -54,19 +65,25 @@ $current_page = basename($_SERVER['SCRIPT_NAME']);
                     <ul class="header__right__widget d-flex align-items-center">
                         <li class="search-container me-3">
                             <form action="search-results.php" method="POST" class="d-flex">
-                                <input type="text" name="search_name" class="form-control" placeholder="Nhập tên sản phẩm" required>
+                                <input type="text" name="keyword" class="form-control" placeholder="Nhập tên sản phẩm" required>
                                 <button type="submit" class="btn btn-outline-secondary ms-1">
                                     <span class="icon_search"></span>
                                 </button>
                             </form>
                         </li>
                         <li class="dropdown position-relative">
-                            <a href="#" class="user-link d-block"><img src="img/user-profile.png" width="45px"></a>
+                            <a href="#" class="user-link d-block">
+                                <img src="img/user-profile.png" width="45px">
+                            </a>
                             <div class="dropdown-menu position-absolute end-0 mt-2 p-3 border bg-white" style="min-width: 220px;">
-                                <strong class="d-block mb-2">Tài khoản: <span>Mãi bên em</span></strong>
-                                <button class="btn btn-sm btn-primary w-100 mb-1" onclick="location.href='lichsudonhang.html'">Lịch sử mua hàng</button>
-                                <button class="btn btn-sm btn-warning w-100 mb-1" onclick="location.href='chinhsuatt.html'">Đổi mật khẩu</button>
-                                <button class="btn btn-sm btn-danger w-100" onclick="location.href='index.html'">Đăng Xuất</button>
+                                <?php if (isset($_SESSION['admin_logged_in'])): ?>
+                                    <strong class="d-block mb-2">Tài khoản: <?= $_SESSION['admin_name'] ?? 'Admin' ?></strong>
+                                    <a href="logout.php" class="btn btn-sm btn-danger w-100">Đăng Xuất</a>
+                                <?php else: ?>
+                                    <strong class="d-block mb-2">Chưa đăng nhập</strong>
+                                    <a href="login.php" class="btn btn-sm btn-success w-100">Đăng nhập</a>
+                                <?php endif; ?>
+
                             </div>
                         </li>
                     </ul>

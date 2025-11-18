@@ -1,136 +1,145 @@
 <?php
 include 'db.php';
+include 'ProductManager.php';
 
-$id = $_GET['id'];
-$stmt = $pdo->prepare("SELECT * FROM sp WHERE IDSP = ?");
-$stmt->execute([$id]);
-$product = $stmt->fetch(PDO::FETCH_ASSOC);
+$db = new Database();
+$pdo = $db->getConnection();
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $idlsp = $_POST['idlsp'];
-    $ten = $_POST['ten'];
-    $mota = $_POST['mota'];
-    $giaban = $_POST['giaban'];
-    $giabankm = $_POST['giabankm'];
-    $image_source = $_POST['image_source'];
+$productManager = new ProductManager($pdo);
 
-    $url = $product['URL'];
-    if ($image_source === 'file' && !empty($_FILES["image"]["name"])) {
-        $target_dir = "img/shop/";
-        $image_name = basename($_FILES["image"]["name"]);
-        $url = $target_dir . $image_name;
-        move_uploaded_file($_FILES["image"]["tmp_name"], $url);
-    } elseif ($image_source === 'url' && !empty($_POST['image_url'])) {
-        $url = $_POST['image_url'];
+$error = "";
+$id = $_GET['id'] ?? null;
+
+if (!$id) die("❌ Không có ID sản phẩm.");
+
+$product = $productManager->getById($id);
+if (!$product) die("❌ Sản phẩm không tồn tại.");
+
+// LẤY SIZE HIỆN CÓ
+$stmt = $pdo->prepare("SELECT IDSIZE FROM ao_size WHERE IDAO = ?");
+$stmt->execute([$product['IDAO']]);
+$product_sizes = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+// ========================= ❗ POST UPDATE =========================
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    if (empty($_POST['idsize'])) {
+        $error = "❌ Vui lòng chọn ít nhất một size!";
     }
 
-    $stmt = $pdo->prepare("UPDATE sp SET IDLSP = ?, URL = ?, TEN = ?, MOTA = ?, GIABAN = ?, GIABANKM = ? WHERE IDSP = ?");
-    $stmt->execute([$idlsp, $url, $ten, $mota, $giaban, $giabankm, $id]);
+    if (!$error) {
+        $data = [
+            'idlsp'   => $_POST['idlsp'],
+            'ten'     => $_POST['ten'],
+            'mota'    => $_POST['mota'],
+            'giaban'  => $_POST['giaban'],
+            'idsize'  => $_POST['idsize'],
+            'image_source' => $_POST['image_source'],
+            'image'   => $_FILES['image'],
+            'image_url' => $_POST['image_url'] ?? '',
+        ];
 
-    header("Location: Qlsp.php");
-    exit;
+        $productManager->update($id, $data);
+        header("Location: Qlsp.php");
+        exit;
+    }
+
+    // GIỮ LẠI DỮ LIỆU CŨ NẾU LỖI
+    $product['TEN']  = $_POST['ten'];
+    $product['MOTA'] = $_POST['mota'];
+    $product['GIA']  = $_POST['giaban'];
+    $product_sizes = $_POST['idsize'] ?? [];// GIỮ LẠI CHECKBOX
 }
 
-$stmt = $pdo->query("SELECT * FROM loaisp");
-$categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// GỌI SIZE & LOẠI
+include 'headerad.php';
+include 'SizeManager.php';
+include 'CategoryManager.php';
+
+$sizes = (new SizeManager($pdo))->getAll();
+$categories = (new CategoryManager($pdo))->getAll();
 ?>
 
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
-    <meta charset="UTF-8">
-    <title>Sửa sản phẩm</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="css/style.css" type="text/css">
+<meta charset="UTF-8">
+<title>Sửa sản phẩm</title>
+<link rel="stylesheet" href="css/bootstrap.min.css">
 </head>
 <body>
+
 <section class="shop spad">
-    <div class="container">
-        <h2>Sửa sản phẩm</h2>
-        <form method="POST" enctype="multipart/form-data">
-            <div class="form-group">
-                <label>Phân loại</label>
-                <select name="idlsp" class="form-control" required>
-                    <?php foreach ($categories as $category): ?>
-                        <option value="<?php echo $category['IDLSP']; ?>" <?php if ($category['IDLSP'] == $product['IDLSP']) echo 'selected'; ?>><?php echo $category['TENLOAI']; ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Tên sản phẩm</label>
-                <input type="text" name="ten" class="form-control" value="<?php echo htmlspecialchars($product['TEN']); ?>" required>
-            </div>
-            <div class="form-group">
-                <label>Mô tả</label>
-                <textarea name="mota" class="form-control" required><?php echo htmlspecialchars($product['MOTA']); ?></textarea>
-            </div>
-            <div class="form-group">
-                <label>Giá bán</label>
-                <input type="number" name="giaban" class="form-control" value="<?php echo $product['GIABAN']; ?>" required>
-            </div>
-            <div class="form-group">
-                <label>Giá bán khuyến mãi</label>
-                <input type="number" name="giabankm" class="form-control" value="<?php echo $product['GIABANKM']; ?>" required>
-            </div>
-            <div class="form-group">
-                <label>Hình ảnh hiện tại</label>
-                <img src="<?php echo htmlspecialchars($product['URL']); ?>" style="max-width: 200px; height: auto; object-fit: contain;" />
-                <label>Thay đổi hình ảnh</label>
-                <div>
-                    <input type="radio" name="image_source" value="file" checked onchange="toggleImageInput()"> Tải file
-                    <input type="radio" name="image_source" value="url" onchange="toggleImageInput()"> Nhập URL
-                </div>
-                <div id="file-input" style="display: block;">
-                    <input type="file" name="image" id="image" class="form-control" accept="image/*" onchange="previewImage(event)">
-                </div>
-                <div id="url-input" style="display: none;">
-                    <input type="url" name="image_url" id="image_url" class="form-control" placeholder="Nhập URL ảnh">
-                </div>
-                <img id="image-preview" style="max-width: 200px; margin-top: 10px; display: none;" />
-            </div>
-            <button type="submit" class="btn btn-primary">Lưu</button>
-            <a href="Qlsp.php" class="btn btn-secondary">Hủy</a>
-        </form>
+<div class="container">
+<h2>Sửa sản phẩm</h2>
+
+<?php if ($error): ?>
+    <div class="alert alert-danger"><?= $error ?></div>
+<?php endif; ?>
+
+<form method="POST" enctype="multipart/form-data">
+
+    <div class="form-group">
+        <label>Phân loại</label>
+        <select name="idlsp" class="form-control">
+            <?php foreach ($categories as $c): ?>
+                <option value="<?= $c['IDLOAI'] ?>" <?= $product['IDLOAI']==$c['IDLOAI']?'selected':'' ?>>
+                    <?= $c['TENLOAI'] ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
     </div>
+
+    <div class="form-group">
+        <label>Tên sản phẩm</label>
+        <input type="text" name="ten" class="form-control"
+               value="<?= htmlspecialchars($product['TEN']) ?>">
+    </div>
+
+    <div class="form-group">
+        <label>Loại Size</label><br>
+        <?php foreach ($sizes as $s): ?>
+            <label style="margin-right:10px;">
+                <input type="checkbox" name="idsize[]"
+                       value="<?= $s['IDSIZE'] ?>"
+                       <?= in_array($s['IDSIZE'], $product_sizes) ? "checked" : "" ?>>
+                <?= $s['TENSIZE'] ?>
+            </label>
+        <?php endforeach; ?>
+    </div>
+
+    <div class="form-group">
+        <label>Mô tả</label>
+        <textarea name="mota" class="form-control"><?= htmlspecialchars($product['MOTA']) ?></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Giá bán</label>
+        <input type="number" name="giaban" class="form-control"
+               value="<?= $product['GIA'] ?>">
+    </div>
+
+    <div class="form-group">
+        <label>Hình ảnh hiện tại</label><br>
+        <img src="<?= $product['URL'] ?>" width="160">
+
+        <br><label>Thay đổi hình ảnh</label><br>
+        <input type="radio" name="image_source" value="file" checked> File
+        <input type="radio" name="image_source" value="url"> URL
+
+        <div>
+            <input type="file" name="image" class="form-control mt-2">
+            <input type="text" name="image_url" class="form-control mt-2"
+                   placeholder="Nhập URL ảnh nếu chọn URL">
+        </div>
+    </div>
+
+    <button class="btn btn-primary">Lưu</button>
+    <a href="Qlsp.php" class="btn btn-secondary">Hủy</a>
+
+</form>
+</div>
 </section>
 
-<script src="js/jquery-3.3.1.min.js"></script>
-<script>
-    function toggleImageInput() {
-        const fileInput = document.getElementById('file-input');
-        const urlInput = document.getElementById('url-input');
-        const imagePreview = document.getElementById('image-preview');
-        if (document.querySelector('input[name="image_source"]:checked').value === 'file') {
-            fileInput.style.display = 'block';
-            urlInput.style.display = 'none';
-            imagePreview.src = '';
-            imagePreview.style.display = 'none';
-        } else {
-            fileInput.style.display = 'none';
-            urlInput.style.display = 'block';
-            const url = document.getElementById('image_url').value;
-            if (url) {
-                imagePreview.src = url;
-                imagePreview.style.display = 'block';
-            }
-        }
-    }
-
-    function previewImage(event) {
-        const imagePreview = document.getElementById('image-preview');
-        const reader = new FileReader();
-        reader.onload = function() {
-            imagePreview.src = reader.result;
-            imagePreview.style.display = 'block';
-        }
-        reader.readAsDataURL(event.target.files[0]);
-    }
-
-    document.getElementById('image_url').addEventListener('input', function() {
-        const imagePreview = document.getElementById('image-preview');
-        imagePreview.src = this.value;
-        imagePreview.style.display = this.value ? 'block' : 'none';
-    });
-</script>
 </body>
 </html>
