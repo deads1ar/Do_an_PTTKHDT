@@ -110,6 +110,8 @@ ol {
   Helper CSS
 -----------------------*/
 
+
+
 .section-title {
 	margin-bottom: 45px;
 }
@@ -1218,7 +1220,14 @@ ol {
 }
 
 .product__item {
-	margin-bottom: 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%; /* Chiều cao tự mở rộng đều */
+    background: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 .product__item:hover .product__hover li {
@@ -1235,9 +1244,16 @@ ol {
 }
 
 .product__item__pic {
-	height: 360px;
-	position: relative;
-	overflow: hidden;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.product__item__pic img {
+    max-height: 100%;
+    object-fit: contain;
 }
 
 .product__item__pic .label {
@@ -1345,8 +1361,26 @@ ol {
 }
 
 .product__item__text {
-	text-align: center;
-	padding-top: 22px;
+    flex-grow: 1;
+    padding-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.product__price {
+    font-weight: bold;
+    margin-top: auto;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.product__actions {
+    margin-top: auto;
+    display: flex;
+    gap: 5px;
+    justify-content: center;
 }
 
 .product__item__text h6 a {
