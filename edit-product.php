@@ -60,7 +60,6 @@ $sizes = (new SizeManager($pdo))->getAll();
 $categories = (new CategoryManager($pdo))->getAll();
 ?>
 
-
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
