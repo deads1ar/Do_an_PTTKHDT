@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 05, 2025 at 04:48 PM
+-- Generation Time: Nov 19, 2025 at 05:49 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -31,58 +31,135 @@ CREATE TABLE `ao` (
   `IDAO` bigint(20) NOT NULL,
   `IDLOAI` bigint(20) DEFAULT NULL,
   `TEN` varchar(255) DEFAULT NULL,
-  `IDSIZE` enum('S','M','L','XL') NOT NULL,
   `GIA` double NOT NULL,
-  `TRANGTHAI` tinyint(4) NOT NULL,
   `MOTA` varchar(255) NOT NULL,
-  `URL` varchar(255) DEFAULT NULL
+  `URL` varchar(255) DEFAULT NULL,
+  `TRANGTHAI` enum('active','hidden') DEFAULT 'active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `ao`
 --
 
-INSERT INTO `ao` (`IDAO`, `IDLOAI`, `TEN`, `IDSIZE`, `GIA`, `TRANGTHAI`, `MOTA`, `URL`) VALUES
-(1, 1, 'Áo thun Polo', 'S', 120000, 1, 'Áo thun cotton thoáng mát', 'img/sanpham/aothun1.jpg'),
-(2, 1, 'Áo thun Polo', 'M', 120000, 1, 'Áo thun cotton thoáng mát', 'img/sanpham/aothun1.jpg'),
-(3, 1, 'Áo thun Polo', 'L', 120000, 1, 'Áo thun cotton thoáng mát', 'img/sanpham/aothun1.jpg'),
-(4, 1, 'Áo thun Polo', 'XL', 120000, 0, 'Áo thun cotton thoáng mát', 'img/sanpham/aothun1.jpg'),
-(5, 2, 'Áo sơ mi trắng', 'S', 180000, 1, 'Áo sơ mi công sở tay dài', 'img/sanpham/aosomi1.jpg'),
-(6, 2, 'Áo sơ mi trắng', 'M', 180000, 0, 'Áo sơ mi công sở tay dài', 'img/sanpham/aosomi1.jpg'),
-(7, 2, 'Áo sơ mi trắng', 'L', 180000, 1, 'Áo sơ mi công sở tay dài', 'img/sanpham/aosomi1.jpg'),
-(8, 2, 'Áo sơ mi trắng', 'XL', 180000, 0, 'Áo sơ mi công sở tay dài', 'img/sanpham/aosomi1.jpg'),
-(9, 3, 'Áo khoác bomber', 'S', 350000, 1, 'Áo khoác chất liệu gió nhẹ', 'img/sanpham/aokhoac1.jpg'),
-(10, 3, 'Áo khoác bomber', 'M', 350000, 0, 'Áo khoác chất liệu gió nhẹ', 'img/sanpham/aokhoac1.jpg'),
-(11, 3, 'Áo khoác bomber', 'L', 350000, 1, 'Áo khoác chất liệu gió nhẹ', 'img/sanpham/aokhoac1.jpg'),
-(12, 3, 'Áo khoác bomber', 'XL', 350000, 0, 'Áo khoác chất liệu gió nhẹ', 'img/sanpham/aokhoac1.jpg'),
-(13, 3, 'Áo hoodie đen', 'S', 250000, 1, 'Áo hoodie unisex form rộng', 'img/sanpham/aohoodie1.jpg'),
-(14, 3, 'Áo hoodie đen', 'M', 250000, 0, 'Áo hoodie unisex form rộng', 'img/sanpham/aohoodie1.jpg'),
-(15, 3, 'Áo hoodie đen', 'L', 250000, 1, 'Áo hoodie unisex form rộng', 'img/sanpham/aohoodie1.jpg'),
-(16, 3, 'Áo hoodie đen', 'XL', 250000, 0, 'Áo hoodie unisex form rộng', 'img/sanpham/aohoodie1.jpg'),
-(17, 3, 'Áo len cổ tròn', 'S', 300000, 1, 'Áo len ấm mùa đông', 'img/sanpham/aolen1.jpg'),
-(18, 3, 'Áo len cổ tròn', 'M', 300000, 0, 'Áo len ấm mùa đông', 'img/sanpham/aolen1.jpg'),
-(19, 3, 'Áo len cổ tròn', 'L', 300000, 1, 'Áo len ấm mùa đông', 'img/sanpham/aolen1.jpg'),
-(20, 3, 'Áo len cổ tròn', 'XL', 300000, 0, 'Áo len ấm mùa đông', 'img/sanpham/aolen1.jpg'),
-(21, 1, 'Áo phông basic', 'S', 100000, 1, 'Áo phông trơn 100% cotton', 'img/sanpham/aophong1.jpg'),
-(22, 1, 'Áo phông basic', 'M', 100000, 0, 'Áo phông trơn 100% cotton', 'img/sanpham/aophong1.jpg'),
-(23, 1, 'Áo phông basic', 'L', 100000, 1, 'Áo phông trơn 100% cotton', 'img/sanpham/aophong1.jpg'),
-(24, 1, 'Áo phông basic', 'XL', 100000, 0, 'Áo phông trơn 100% cotton', 'img/sanpham/aophong1.jpg'),
-(25, 2, 'Áo sơ mi caro', 'S', 190000, 1, 'Áo sơ mi caro trẻ trung', 'img/sanpham/aosomicaro1.jpg'),
-(26, 2, 'Áo sơ mi caro', 'M', 190000, 0, 'Áo sơ mi caro trẻ trung', 'img/sanpham/aosomicaro1.jpg'),
-(27, 2, 'Áo sơ mi caro', 'L', 190000, 1, 'Áo sơ mi caro trẻ trung', 'img/sanpham/aosomicaro1.jpg'),
-(28, 2, 'Áo sơ mi caro', 'XL', 190000, 0, 'Áo sơ mi caro trẻ trung', 'img/sanpham/aosomicaro1.jpg'),
-(29, 3, 'Áo khoác jean', 'S', 400000, 1, 'Áo khoác jean xanh đậm', 'img/sanpham/aokhoacjean1.jpg'),
-(30, 3, 'Áo khoác jean', 'M', 400000, 0, 'Áo khoác jean xanh đậm', 'img/sanpham/aokhoacjean1.jpg'),
-(31, 3, 'Áo khoác jean', 'L', 400000, 1, 'Áo khoác jean xanh đậm', 'img/sanpham/aokhoacjean1.jpg'),
-(32, 3, 'Áo khoác jean', 'XL', 400000, 0, 'Áo khoác jean xanh đậm', 'img/sanpham/aokhoacjean1.jpg'),
-(33, 1, 'Áo thun cổ trụ', 'S', 150000, 1, 'Áo cổ trụ phù hợp đi làm', 'img/sanpham/aocotru1.jpg'),
-(34, 1, 'Áo thun cổ trụ', 'M', 150000, 0, 'Áo cổ trụ phù hợp đi làm', 'img/sanpham/aocotru1.jpg'),
-(35, 1, 'Áo thun cổ trụ', 'L', 150000, 1, 'Áo cổ trụ phù hợp đi làm', 'img/sanpham/aocotru1.jpg'),
-(36, 1, 'Áo thun cổ trụ', 'XL', 150000, 0, 'Áo cổ trụ phù hợp đi làm', 'img/sanpham/aocotru1.jpg'),
-(37, 1, 'Áo thể thao', 'S', 200000, 1, 'Áo thể thao thấm hút mồ hôi', 'img/sanpham/aothethao1.jpg'),
-(38, 1, 'Áo thể thao', 'M', 200000, 0, 'Áo thể thao thấm hút mồ hôi', 'img/sanpham/aothethao1.jpg'),
-(39, 1, 'Áo thể thao', 'L', 200000, 1, 'Áo thể thao thấm hút mồ hôi', 'img/sanpham/aothethao1.jpg'),
-(40, 1, 'Áo thể thao', 'XL', 200000, 0, 'Áo thể thao thấm hút mồ hôi', 'img/sanpham/aothethao1.jpg');
+INSERT INTO `ao` (`IDAO`, `IDLOAI`, `TEN`, `GIA`, `MOTA`, `URL`, `TRANGTHAI`) VALUES
+(1, 1, 'Áo thun Polo', 120000, 'ngon bổ rẻ\r\n', 'img/shop/aothun1.png', 'active'),
+(2, 2, 'Áo sơ mi trắng', 180000, 'Áo sơ mi công sở tay dài', 'img/sanpham/aosomi1.jpg', 'active'),
+(3, 3, 'Áo khoác bomber', 350000, 'Áo khoác chất liệu gió nhẹ', 'img/sanpham/ao_khoac/ao_khoac_1/aokhoac1.jpg', 'active'),
+(4, 3, 'Áo hoodie đen', 250000, 'Áo hoodie unisex form rộng', 'img/sanpham/aohoodie1.jpg', 'active'),
+(5, 1, 'Áo len cổ tròn', 300000, 'Áo len ấm mùa đông', 'img/sanpham/aolen1.jpg', 'active'),
+(6, 1, 'Áo phông basic', 100000, 'Áo phông trơn 100% cotton', 'img/sanpham/aophong1.jpg', 'active'),
+(7, 2, 'Áo sơ mi caro', 190000, 'Áo sơ mi caro trẻ trung', 'img/sanpham/aosomicaro1.jpg', 'active'),
+(8, 3, 'Áo khoác jean', 400000, 'Áo khoác jean xanh đậm', 'img/sanpham/aokhoacjean1.jpg', 'active'),
+(9, 1, 'Áo thun cổ trụ', 150000, 'Áo cổ trụ phù hợp đi làm', 'img/sanpham/aocotru1.jpg', 'active'),
+(10, 1, 'Áo thể thao', 200000, 'Áo thể thao thấm hút mồ hôi', 'img/sanpham/aothethao1.jpg', 'active'),
+(21, 1, 'linh', 2000000, 'tuyệt vời', 'img/shop/15-anh-meme-meo-gio-tay-inkythuatso-17-15-31-23.webp', 'hidden'),
+(27, 3, 'Áo Khoác Nam Lông Vũ Nhẹ Gấp Gọn Có Mũ', 500000, 'Chất liệu: Vải ngoài: nylon 100%; Lót bông: 90% lông vũ, 10% lông nhỏ; Lót trong: polyester 100%; Bo viền: nylon 70%, elastane (Anh)/spandex (Mỹ) 30%; Dải băng: polyester 100%; Túi đựng: nylon 100%.\r\n\r\nDùng lông vũ 750 fill power; gấp gọn vào túi trong để', 'img/shop/aokhoac1.jpg', 'active'),
+(28, 3, 'Áo Khoác Nam Vải Boa Fleece', 2, 'Chất liệu: Thân — mặt ngoài: polyester 100%, mặt trong: polyester 100% (lớp trong dùng nhựa polyurethane); Vải phụ: nylon 100%; Bo viền: nylon 72%, elastane (Anh)/spandex (Mỹ) 28%; Lót túi: polyester 100%.\r\n\r\nFleece nhẹ ấm được dán lót tăng giữ nhiệt. Vải', 'img/shop/aokhoac2.jpg', 'active'),
+(29, 3, 'Áo Len Chui Đầu Vải Fleece Tái Chế', 3, 'Chất liệu: Thân: polyester 100%; Bo viền: polyester 100%; Túi lót (mảnh sau): polyester 100%; Túi lót (mảnh trước): polyester 100%; Viền trang trí: polyester 100%.\r\n\r\nChai tiện dụng để chiết/đựng dầu gội hoặc dầu xả.\r\n\r\nLưu ý: Thân sản phẩm dùng 100% poly', 'img/shop/aokhoac3.jpg', 'active'),
+(30, 1, 'Áo Cardigan Vải Fleece Tái Chế', 4, 'Chất liệu: Thân: polyester 100%; Viền trang trí: polyester 100%; Bo viền: polyester 100%.\r\n\r\nChai tiện dụng để chiết/đựng dầu gội hoặc dầu xả.\r\n\r\nLưu ý: Thân sản phẩm dùng 100% polyester tái chế. Màu đậm có thể lem khi ma sát hoặc lúc ướt—giặt riêng. Ma s', 'img/shop/aokhoac4.jpg', 'active'),
+(31, 1, 'Áo Khoác Nam Lông Vũ Nhẹ Gấp Gọn Cổ Trụ', 5, 'Chất liệu: Vải ngoài: nylon 100%; Lót: nylon 100%; Lớp nhồi: 90% lông vũ, 10% lông — Có bộ phận có nguồn gốc động vật (UK) / Down (ít nhất 90% down) (US) / 90% down, 10% lông thủy cầm (CA) / Tối thiểu 90% down, 10% lông nhỏ (AU).\r\n\r\nDùng lông vũ độ nở 750', 'img/shop/aokhoac5.jpg', 'active'),
+(32, 2, 'Áo Sơ Mi Nam Vải Flannel Tay Dài', 1, 'Chất liệu: 100% cotton\r\n\r\nChải lông để mang lại độ ấm và chạm mềm; cotton được nuôi trồng trong điều kiện tự nhiên tại châu Phi.\r\n\r\nLưu ý: Màu đậm có thể lem do ma sát hoặc khi ướt—giặt riêng; tránh xa nguồn lửa vì lông bề mặt có thể bắt lửa; do chất liệu', 'img/shop/aosomi1.jpg', 'active'),
+(33, 2, 'Áo Sơ Mi Nam Vải Kapok Double Gauze Tay Ngắn', 2, 'Chất liệu: Cotton 90%, Kapok 10%\r\nChất liệu vải xô mềm mại làm từ sợi kapok tự nhiên, nhẹ. Bông là bông hữu cơ.\r\nLưu ý: Sản phẩm màu đậm có thể bị lem màu do ma sát khi sử dụng hoặc khi tiếp xúc khi bị ướt. Giặt riêng với các sản phẩm khác. Do đặc tính ch', 'img/shop/aosomi2.jpg', 'active'),
+(34, 1, 'Áo Sơ Mi Nam Ít Nhăn Cổ Rộng Tay Dài', 3, 'Chất liệu: 100% cotton\r\n\r\nXử lý để vải 100% cotton có thể mặc không cần ủi; cotton là hữu cơ.\r\n\r\nLưu ý: Màu đậm có thể lem—giặt riêng; tùy điều kiện giặt, có thể cần ủi nhẹ để bề mặt phẳng đẹp.', 'img/shop/aosomi3.jpg', 'active'),
+(35, 2, 'Áo Sơ Mi Nam Cổ Trụ Tay Dài Vải Linen Washed', 4, 'Chất liệu: 100% linen\r\n\r\nNét đặc trưng của sản phẩm là chất liệu linen Pháp được giặt trước tạo nên bề mặt tự nhiên. Càng mặc càng trở nên mềm mại, thoải mái và mát mẻ.\r\n\r\nLưu ý: Sản phẩm màu đậm có thể bị lem màu do ma sát trong quá trình sử dụng hoặc kh', 'img/shop/aosomi4.jpg', 'active'),
+(36, 2, 'Áo Sơ Mi Nam Vải Broadcloth Dáng Rộng Tay Ngắn', 5, 'Chất liệu: 100% cotton\r\n\r\nĐược giặt trước để tạo nên bề mặt mềm mại. Bông được nuôi trồng trong môi trường tự nhiên ở Châu Phi.\r\n\r\nLưu ý: Sản phẩm màu đậm có thể bị loang màu do ma sát hoặc tiếp xúc khi ướt. Vui lòng giặt riêng với các sản phẩm khác.', 'img/shop/aosomi5.jpg', 'active'),
+(37, 1, 'Áo Thun Nam Vải Brushed Jersey Cổ Tròn Tay Dài', 1, 'Chất liệu: Thân: cotton 100%; Vải gân (rib): cotton 78%, elastomultiester (Anh)/elasterell-P (Mỹ) 22%.\r\n\r\nChải lông để mang lại sự ấm áp và bề mặt mịn; cotton được nuôi trồng trong điều kiện tự nhiên tại châu Phi.\r\n\r\nLưu ý: Màu đậm có thể lem do ma sát ho', 'img/shop/1.jpg', 'active'),
+(38, 1, 'Áo Thun Nam Waffle Chống Uv Nhanh Khô Cổ Tròn Tay Dài', 2, 'Chất liệu: Thân áo: 100% polyester. Bo viền: 100% polyester\r\n\r\nMay từ vải waffle độ dày vừa, mặc dễ chịu với bề mặt mềm bồng bềnh.\r\n\r\nLưu ý: Sử dụng 38% polyester tái chế; màu đậm có thể lem—giặt riêng; UPF 50+ và tỷ lệ che chắn UV ≥90%; UPF là mức bảo vệ', 'img/shop/4547315475681_05_org.jpg', 'active'),
+(39, 1, 'Áo Thun Nam Vải Washed Sợi Dày Tay Ngắn', 3, 'Được dệt từ sợi cotton dày để tạo ra chất liệu bền chắc Cotton sử dụng là cotton hữu cơ\r\n\r\nChất liệu: Thân áo: 100% cotton. Phần bo: 90% cotton, 10% elastomultiester (UK) / elasterell-p (US)\r\n\r\nLưu ý: Sản phẩm màu đậm có thể bị loang màu do ma sát hoặc kh', 'img/shop/3.jpg', 'active'),
+(40, 1, 'Áo Thun Nam Vải Cool Touch Dáng Rộng Tay Ngắn', 4, 'Được dệt tinh tế từ chất liệu mang lại cảm giác mát lạnh khi mặc Sử dụng cotton hữu cơ\r\n\r\nChất liệu: Thân áo: 53% cotton, 47% polyester. Phần bo: 72% cotton, 28% elastomultiester (UK) / elasterell-p (US)\r\n\r\nLưu ý: Sản phẩm này sử dụng 47% polyester tái ch', 'img/shop/4.jpg', 'active'),
+(41, 1, 'Áo Thun Nam Vải Jersey Kẻ Sọc Cổ Tròn Tay Ngắn', 5, 'Được may từ chất liệu có độ dày vừa phải, mang lại cảm giác mịn màng, dễ chịu trên da. Cotton được nuôi trồng tự nhiên tại châu Phi.\r\n\r\nChất liệu: Thân áo: 60% cotton, 40% polyester. Phần bo: 57% cotton, 38% polyester, 5% elastane (UK) / spandex (US)\r\n\r\nL', 'img/shop/5.jpg', 'active');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ao_size`
+--
+
+CREATE TABLE `ao_size` (
+  `IDSIZE` int(10) NOT NULL,
+  `IDAO` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `ao_size`
+--
+
+INSERT INTO `ao_size` (`IDSIZE`, `IDAO`) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5),
+(1, 6),
+(1, 7),
+(1, 8),
+(1, 9),
+(1, 10),
+(1, 21),
+(1, 27),
+(1, 28),
+(1, 29),
+(1, 30),
+(1, 31),
+(1, 32),
+(1, 33),
+(1, 34),
+(1, 35),
+(1, 36),
+(1, 37),
+(1, 38),
+(1, 39),
+(1, 40),
+(1, 41),
+(2, 1),
+(2, 21),
+(2, 27),
+(2, 28),
+(2, 29),
+(2, 30),
+(2, 31),
+(2, 32),
+(2, 33),
+(2, 34),
+(2, 35),
+(2, 36),
+(2, 37),
+(2, 38),
+(2, 39),
+(2, 40),
+(2, 41),
+(3, 1),
+(3, 21),
+(3, 27),
+(3, 28),
+(3, 29),
+(3, 30),
+(3, 31),
+(3, 32),
+(3, 33),
+(3, 34),
+(3, 35),
+(3, 36),
+(3, 37),
+(3, 38),
+(3, 39),
+(3, 40),
+(3, 41),
+(4, 21),
+(4, 27),
+(4, 28),
+(4, 29),
+(4, 30),
+(4, 31),
+(4, 32),
+(4, 33),
+(4, 34),
+(4, 35),
+(4, 36),
+(4, 37),
+(4, 39),
+(4, 40),
+(4, 41);
 
 -- --------------------------------------------------------
 
@@ -96,6 +173,30 @@ CREATE TABLE `ctdh` (
   `SL` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `ctdh`
+--
+
+INSERT INTO `ctdh` (`IDDH`, `IDAO`, `SL`) VALUES
+(1, 1, 2),
+(1, 2, 1),
+(2, 3, 1),
+(2, 4, 2),
+(3, 5, 1),
+(3, 6, 3),
+(4, 7, 1),
+(4, 8, 1),
+(5, 9, 2),
+(6, 1, 1),
+(6, 10, 1),
+(7, 2, 3),
+(8, 3, 1),
+(8, 4, 1),
+(9, 5, 2),
+(9, 6, 1),
+(10, 7, 1),
+(10, 8, 2);
+
 -- --------------------------------------------------------
 
 --
@@ -107,24 +208,25 @@ CREATE TABLE `donhang` (
   `IDKH` bigint(20) NOT NULL,
   `IDNV` bigint(20) NOT NULL,
   `TONG` double NOT NULL,
-  `TRANGTHAI` enum('CHUA XAC NHAN','DA XAC NHAN','DANG GIAO','THANH CONG') NOT NULL
+  `TRANGTHAI` varchar(50) NOT NULL,
+  `TIME` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `donhang`
 --
 
-INSERT INTO `donhang` (`IDDH`, `IDKH`, `IDNV`, `TONG`, `TRANGTHAI`) VALUES
-(1, 1, 1, 240000, 'CHUA XAC NHAN'),
-(2, 2, 2, 300000, 'DA XAC NHAN'),
-(3, 3, 3, 500000, 'DANG GIAO'),
-(4, 4, 4, 200000, 'THANH CONG'),
-(5, 5, 5, 120000, 'DA XAC NHAN'),
-(6, 6, 6, 350000, 'DANG GIAO'),
-(7, 7, 7, 400000, 'THANH CONG'),
-(8, 8, 8, 150000, 'CHUA XAC NHAN'),
-(9, 9, 9, 250000, 'DA XAC NHAN'),
-(10, 10, 10, 180000, 'CHUA XAC NHAN');
+INSERT INTO `donhang` (`IDDH`, `IDKH`, `IDNV`, `TONG`, `TRANGTHAI`, `TIME`) VALUES
+(1, 1, 1, 240000, 'CHUA XAC NHAN', '2025-11-11 16:32:45'),
+(2, 2, 2, 300000, 'DA XAC NHAN', '2025-11-11 16:32:45'),
+(3, 3, 3, 500000, 'DANG GIAO', '2025-11-11 16:32:45'),
+(4, 4, 4, 200000, 'THANH CONG', '2025-11-11 16:32:45'),
+(5, 5, 5, 120000, 'DA XAC NHAN', '2025-11-11 16:32:45'),
+(6, 6, 6, 350000, 'DANG GIAO', '2025-11-11 16:32:45'),
+(7, 7, 7, 400000, 'THANH CONG', '2025-11-11 16:32:45'),
+(8, 8, 8, 150000, 'CHUA XAC NHAN', '2025-11-11 16:32:45'),
+(9, 9, 9, 250000, 'DA XAC NHAN', '2025-11-11 16:32:45'),
+(10, 10, 10, 180000, 'CHUA XAC NHAN', '2025-11-11 16:32:45');
 
 -- --------------------------------------------------------
 
@@ -137,25 +239,29 @@ CREATE TABLE `khachhang` (
   `TEN` varchar(255) DEFAULT NULL,
   `SDT` varchar(15) NOT NULL,
   `DIACHI` varchar(255) NOT NULL,
-  `PWORD` varchar(255) NOT NULL
+  `PWORD` varchar(255) NOT NULL,
+  `TRANGTHAI` bigint(20) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `khachhang`
 --
 
-INSERT INTO `khachhang` (`IDKH`, `TEN`, `SDT`, `DIACHI`, `PWORD`) VALUES
-(1, 'Nguyễn Văn A', '0901234567', 'Hà Nội', '12345'),
-(2, 'Trần Thị B', '0912345678', 'Hồ Chí Minh', 'abcd'),
-(3, 'Lê Văn C', '0987654321', 'Đà Nẵng', 'pass1'),
-(4, 'Phạm Thị D', '0978123456', 'Hải Phòng', 'pass2'),
-(5, 'Đỗ Văn E', '0909988776', 'Cần Thơ', '123abc'),
-(6, 'Ngô Thị F', '0934455667', 'Huế', 'pwf'),
-(7, 'Bùi Văn G', '0955566778', 'Nha Trang', 'pw123'),
-(8, 'Vũ Thị H', '0922334455', 'Bắc Ninh', '4567'),
-(9, 'Lý Văn I', '0945566778', 'Nam Định', 'xyz'),
-(10, 'Phan Thị K', '0967788990', 'Thanh Hóa', '0000'),
-(11, '1', '1', '1', '1');
+INSERT INTO `khachhang` (`IDKH`, `TEN`, `SDT`, `DIACHI`, `PWORD`, `TRANGTHAI`) VALUES
+(1, 'Nguyễn Văn A', '0901234567', 'Hà Nội', '123', 1),
+(2, 'Trần Thị B', '0912345678', 'Hồ Chí Minh', 'abcd', 1),
+(3, 'Lê Văn C', '0987654321', 'Đà Nẵng', 'pass1', 1),
+(4, 'Phạm Thị D', '0978123456', 'Hải Phòng', 'pass2', 1),
+(5, 'Đỗ Văn E', '0909988776', 'Cần Thơ', '123abc', 1),
+(6, 'Ngô Thị F', '0934455667', 'Huế', 'pwf', 1),
+(7, 'Bùi Văn G', '0955566778', 'Nha Trang', 'pw123', 1),
+(8, 'Vũ Thị H', '0922334455', 'Bắc Ninh', '4567', 1),
+(9, 'Lý Văn I', '0945566778', 'Nam Định', 'xyz', 1),
+(10, 'Phan Thị K', '0967788990', 'Thanh Hóa', '0000', 1),
+(15, '1', '1', '11', '1', 0),
+(16, '2', '1', '1', '123', 1),
+(17, '2', '1', '122222222', '123', 1),
+(18, '1', '1', '1', '1', 1);
 
 -- --------------------------------------------------------
 
@@ -166,6 +272,7 @@ INSERT INTO `khachhang` (`IDKH`, `TEN`, `SDT`, `DIACHI`, `PWORD`) VALUES
 CREATE TABLE `loaiao` (
   `IDLOAI` bigint(20) NOT NULL,
   `TENLOAI` varchar(255) NOT NULL,
+  `LOAISIZE` enum('S','M','L','XL') NOT NULL,
   `MOTA` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -173,10 +280,10 @@ CREATE TABLE `loaiao` (
 -- Dumping data for table `loaiao`
 --
 
-INSERT INTO `loaiao` (`IDLOAI`, `TENLOAI`, `MOTA`) VALUES
-(1, 'Áo thun', 'Các mẫu áo thun thoáng mát, năng động'),
-(2, 'Áo sơ mi', 'Áo sơ mi công sở, thời trang nam nữ'),
-(3, 'Áo khoác', 'Áo khoác bomber, jean, gió, v.v.');
+INSERT INTO `loaiao` (`IDLOAI`, `TENLOAI`, `LOAISIZE`, `MOTA`) VALUES
+(1, 'Áo thun', 'S', 'Các mẫu áo thun thoáng mát, năng động'),
+(2, 'Áo sơ mi', 'M', 'Áo sơ mi công sở, thời trang nam nữ'),
+(3, 'Áo khoác', 'L', 'Áo Khoác Nam Lông Vũ Nhẹ Gấp Gọn Có Mũ\n\nChất liệu: Vải ngoài: nylon 100%; Lót bông: 90% lông vũ, 10% lông nhỏ; Lót trong: polyester 100%; Bo viền: nylon 70%, elastane (Anh)/spandex (Mỹ) 30%; Dải băng: polyester 100%; Túi đựng: nylon 100%.\n\nDùng lông vũ 75');
 
 -- --------------------------------------------------------
 
@@ -188,25 +295,48 @@ CREATE TABLE `nhanvien` (
   `IDNV` bigint(20) NOT NULL,
   `TENNV` varchar(255) NOT NULL,
   `SDT` varchar(15) NOT NULL,
-  `PWORD` varchar(255) NOT NULL,
-  `DIACHI` varchar(255) DEFAULT NULL
+  `DIACHI` varchar(255) DEFAULT NULL,
+  `TAIKHOAN` varchar(50) NOT NULL,
+  `MATKHAU` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `nhanvien`
 --
 
-INSERT INTO `nhanvien` (`IDNV`, `TENNV`, `SDT`, `PWORD`, `DIACHI`) VALUES
-(1, 'Nguyễn Minh', '0909000001', 'nv1', 'Hà Nội'),
-(2, 'Trần Hải', '0909000002', 'nv2', 'Đà Nẵng'),
-(3, 'Lê Hòa', '0909000003', 'nv3', 'Huế'),
-(4, 'Phạm Sơn', '0909000004', 'nv4', 'Hồ Chí Minh'),
-(5, 'Đỗ Trang', '0909000005', 'nv5', 'Bắc Giang'),
-(6, 'Ngô Tùng', '0909000006', 'nv6', 'Nha Trang'),
-(7, 'Bùi Giang', '0909000007', 'nv7', 'Hải Phòng'),
-(8, 'Vũ Mai', '0909000008', 'nv8', 'Hà Nội'),
-(9, 'Lý Khang', '0909000009', 'nv9', 'Huế'),
-(10, 'Phan Anh', '0909000010', 'nv10', 'Cần Thơ');
+INSERT INTO `nhanvien` (`IDNV`, `TENNV`, `SDT`, `DIACHI`, `TAIKHOAN`, `MATKHAU`) VALUES
+(1, 'Admin', '0123456789', 'Hà Nội', 'admin', '1'),
+(2, 'Trần Hải', '0909000002', 'Đà Nẵng', '123', '123'),
+(3, 'Lê Hòa', '0909000003', 'Huế', 'asdAWD', 'WD'),
+(4, 'Phạm Sơn', '0909000004', 'Hồ Chí Minh', 'sda', 'qD'),
+(5, 'Đỗ Trang', '0909000005', 'Bắc Giang', 'QWDd', 'Dadw'),
+(6, 'Ngô Tùng', '0909000006', 'Nha Trang', 'QD', 'qwd'),
+(7, 'Bùi Giang', '0909000007', 'Hải Phòng', 'Dad', 'sca'),
+(8, 'Vũ Mai', '0909000008', 'Hà Nội', 'ad', 'awd'),
+(9, 'Lý Khang', '0909000009', 'Huế', 'Scd', 'CsA'),
+(10, 'Phan Anh', '0909000010', 'Cần Thơ', 'casc', 'aacscs'),
+(11, 'Nguyễn Minh', '0909000001', 'Hà Nội', '123', '123');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `size`
+--
+
+CREATE TABLE `size` (
+  `IDSIZE` int(10) NOT NULL,
+  `TENSIZE` varchar(3) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `size`
+--
+
+INSERT INTO `size` (`IDSIZE`, `TENSIZE`) VALUES
+(1, 'S'),
+(2, 'M'),
+(3, 'L'),
+(4, 'XL');
 
 --
 -- Indexes for dumped tables
@@ -217,6 +347,13 @@ INSERT INTO `nhanvien` (`IDNV`, `TENNV`, `SDT`, `PWORD`, `DIACHI`) VALUES
 --
 ALTER TABLE `ao`
   ADD PRIMARY KEY (`IDAO`);
+
+--
+-- Indexes for table `ao_size`
+--
+ALTER TABLE `ao_size`
+  ADD PRIMARY KEY (`IDSIZE`,`IDAO`),
+  ADD KEY `ao_size_ibfk_2` (`IDAO`);
 
 --
 -- Indexes for table `ctdh`
@@ -252,8 +389,20 @@ ALTER TABLE `nhanvien`
   ADD PRIMARY KEY (`IDNV`);
 
 --
+-- Indexes for table `size`
+--
+ALTER TABLE `size`
+  ADD PRIMARY KEY (`IDSIZE`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `ao`
+--
+ALTER TABLE `ao`
+  MODIFY `IDAO` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `donhang`
@@ -265,7 +414,7 @@ ALTER TABLE `donhang`
 -- AUTO_INCREMENT for table `khachhang`
 --
 ALTER TABLE `khachhang`
-  MODIFY `IDKH` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `IDKH` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `loaiao`
@@ -277,11 +426,24 @@ ALTER TABLE `loaiao`
 -- AUTO_INCREMENT for table `nhanvien`
 --
 ALTER TABLE `nhanvien`
-  MODIFY `IDNV` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `IDNV` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `size`
+--
+ALTER TABLE `size`
+  MODIFY `IDSIZE` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `ao_size`
+--
+ALTER TABLE `ao_size`
+  ADD CONSTRAINT `ao_size_ibfk_1` FOREIGN KEY (`IDSIZE`) REFERENCES `size` (`IDSIZE`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `ao_size_ibfk_2` FOREIGN KEY (`IDAO`) REFERENCES `ao` (`IDAO`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `ctdh`
