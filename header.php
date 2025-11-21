@@ -20,13 +20,13 @@ if (time() - $_SESSION['timeout'] > $session_duration) {
 $current_page = basename($_SERVER['SCRIPT_NAME']);
 $product = isset($_GET['product']) ? $_GET['product'] : "";
 ?>
-    <link rel="stylesheet" href="./web2/css/style.css" type="text/css">
+    <link rel="stylesheet" href="css/style.css" type="text/css">
 <header class="header">
     <div class="container-fluid">
         <div class="row">
             <div class="col-xl-3 col-lg-2">
                 <div class="header__logo">
-                    <a href="/index.php"><img src="../web2/img/logo.png" alt=""></a>
+                    <a href="/index.php"><img src="./img/logo.png" alt=""></a>
                 </div>
             </div>
             <div class="col-xl-6 col-lg-7">
@@ -64,37 +64,39 @@ $product = isset($_GET['product']) ? $_GET['product'] : "";
                             </li>
                             <?php
 if (isset($_SESSION['IDKH'])) {
-    // User is logged in
-    echo '<li class="dropdown">
-        <div>
-            <a href="#" class="user-link"><img src="/web2/img/user-profile.png" width="45px"></img></a>        
-            <div class="dropdown-menu" >                                  
-                <strong>Tài khoản: <span>' . htmlspecialchars($_SESSION["username"]) . '</span></strong>  
-                <button class="action-button" onclick=location.href="./lichsudonhang.php">Lịch sử mua hàng</button>
-                <button class="action-button" onclick=location.href="./chinhsuatt.php">Chỉnh sửa thông tin</button>
-                <button class="action-button logout" id="asa" onclick=showNotification()>Đăng Xuất</button>    
-                    <script>
-    // Wait for the DOM to load before attaching event listeners
-    document.addEventListener("DOMContentLoaded", function () {
-        const logoutButton = document.getElementById("asa");
 
-        if (logoutButton) {
-            logoutButton.addEventListener("click", function () {
-                if (confirm("Bạn có chắc chắn muốn đăng xuất không?")) {
-                    window.location.href = "./dangxuat.php"; // Adjust this URL to your logout processing page
-                }
-            });
-        }
-    });
-</script>                           
+    echo '
+    <li class="dropdown">
+        <div class="user-dropdown">
+            <a href="#" class="user-link">
+                <img src="./img/user-profile.png" width="45px">
+            </a>
+
+            <div class="dropdown-menu" style="text-align:left;">                                  
+                <strong><span>' . htmlspecialchars($_SESSION["username"]) . '</span></strong>  
+
+                <button class="action-button"
+                    onclick="location.href=\'./lichsudonhang.php\'">
+                    Lịch sử mua hàng
+                </button>
+
+                <button class="action-button"
+                    onclick="location.href=\'./chinhsuatt.php\'">
+                    Chỉnh sửa thông tin
+                </button>
+
+                <button class="action-button logout" id="btnLogout">
+                    Đăng Xuất
+                </button>    
             </div>
         </div>
-    </li> ' ;
-} else {
-    // User is not logged in
-    echo'<a href="./dangnhap.html">Đăng Nhập</a>';
+    </li>';
+} 
+else {
+    echo '<a href="./dangnhap.html">Đăng Nhập</a>';
 }
 ?>
+
                         </ul>
                     </div>
                 </div>
@@ -105,3 +107,101 @@ if (isset($_SESSION['IDKH'])) {
         </div>
     </div>
 </header>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const logoutButton = document.getElementById("btnLogout");
+
+    if (logoutButton) {
+        logoutButton.addEventListener("click", function () {
+            if (confirm("Bạn có chắc chắn muốn đăng xuất không?")) {
+                window.location.href = "./dangxuat.php";
+            }
+        });
+    }
+});
+</script>
+    <style>
+    /* Vị trí và style của dropdown container */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Icon user */
+.user-link img {
+    width: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.user-link img:hover {
+    opacity: 0.8;
+}
+
+/* Menu chính */
+.dropdown-menu {
+    position: absolute;
+    top: 55px;
+    right: 0;
+    width: 220px;
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    display: none;
+    animation: fadeIn 0.2s ease;
+    z-index: 50;
+}
+
+/* Hiệu ứng fade */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Khi hover vào icon */
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+/* Username */
+.dropdown-menu strong span {
+    font-size: 16px;
+    display: block;
+    margin-bottom: 12px;
+    color: #1c0625ff;
+}
+
+/* Button trong dropdown */
+.action-button {
+    width: 100%;
+    padding: 10px 12px;
+    text-align: left;
+    border: none;
+    background: #c9e8ceff;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+    color: #092708ff;
+}
+
+.action-button:hover {
+    background: #60c115ff;
+    color: white;
+    transform: translateX(3px);
+}
+
+/* Logout button */
+.action-button.logout {
+    background: #ffeaea;
+    color: #d63031;
+}
+
+.action-button.logout:hover {
+    background: #aa4444ff;
+    color: white;
+}
+</style>

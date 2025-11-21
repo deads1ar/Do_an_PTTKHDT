@@ -14,5 +14,5 @@ if (ini_get("session.use_cookies")) {
 }
 
 // Redirect to login page
-echo "<script type='text/javascript'> window.location.href='../index.php';</script>";
+echo "<script type='text/javascript'> window.location.href='./index.php';</script>";
 ?>

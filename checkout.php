@@ -116,44 +116,58 @@ $row0 = $kh->getKhachHangById($idkh);
             }
             else{
                 echo "<script>console.log('PHP says:not-empty');</script>";
-            foreach($usercart as $productid=>$quantity) { 
-                $row = $ao->getAoById($productid);
+                $sizeMap = [1=>"S", 2=>"M", 3=>"L", 4=>"XL"];
+                foreach ($usercart as $productid => $sizes){
+                    foreach ($sizes as $sizeId => $quantity){
+                        $row = $ao->getAoById($productid);
+                    
             ?>
             <tbody>
                 <tr>
                     <td>
                         <div class="product__item__pic1 set-bg" data-setbg="<?php echo $row['URL'];?>"></div>
                     </td>
-                    <td><?php echo $row['TEN']; ?></td>
-                    <td><?php echo number_format($row['GIA'],0,"",".") ."đ"; ?></td>
+                    <td><?php echo $row['TEN']; echo "(size: " . ($sizeMap[$sizeId] ?? "N/A") . ")" ?></td>
+                    <td><?php echo number_format($row['GIA'],0,"",".") ."đ";?></td>
                     <td>
                     <input type="number" value="<?php echo $quantity; ?>" min="1" class="quantity-input"
                         data-productid="<?php echo $productid; ?>"
-                        data-price="<?php echo $row['GIA']; ?>"
+                        data-price="<?php echo $row['GIA'];?> "
+                        data-sizeid="<?php echo $sizeId; ?>"
                         oninput="updateRowTotal(this)">
                     </td>
                     <td class="total-price"><?php echo number_format(($row['GIA'] * $quantity),0,"",".") ."đ"; ?></td>
                     <td> 
-                    <button onclick="removeItem('<?php echo $productid; ?>', this)">Xóa</button>
+                    <button onclick="removeItem('<?php echo $productid; ?>','<?php echo $sizeId; ?>', this)">Xóa</button>
                         <script>
-                        function removeItem(productId, button) {
-                        let row = button.closest("tr"); // Find the row of the item
-                        row.remove(); // Remove the row from the table
+                        function removeItem(productId, sizeId , button) {
+                            let row = button.closest("tr"); // Find the row of the item
+                            row.remove(); // Remove the row from the table
 
-                        alert("Sản phẩm đã xóa khỏi giỏ hàng.");
+                            //alert("Sản phẩm đã xóa khỏi giỏ hàng.");
+                            let xhr = new XMLHttpRequest();
+                            xhr.open("POST", "remove_from_cart.php", true);
+                            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-                        // Remove from cookie using AJAX
-                        let xhr = new XMLHttpRequest();
-                        xhr.open("POST", "remove_from_cart.php", true);
-                        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                        xhr.send("productId=" + productId);
+                            xhr.onload = function() {
+                                    if (xhr.status === 200) {
+                                        if (xhr.responseText.trim() === "Item removed") {
+                                            alert("Sản phẩm đã xóa khỏi giỏ hàng.");
+                                        }
+                                    } else {
+                                        alert("Có lỗi xảy ra khi xóa sản phẩm.");
+                                    }
+                                };
 
+                            xhr.send("productId=" + encodeURIComponent(productId) + "&size=" + encodeURIComponent(sizeId));
                         }
-                    </script>
+                        </script>                        
                     </td>
                 </tr>
             </tbody>
-            <?php }
+            <?php 
+                    }
+                }
             }
             ?>
         </table>
@@ -162,6 +176,7 @@ $row0 = $kh->getKhachHangById($idkh);
     let price = parseFloat(input.dataset.price);  // Get price
     let quantity = parseInt(input.value);         // Get updated quantity
     let productId = input.dataset.productid;      // Get product ID
+    let sizeId = input.dataset.sizeid;              // Get size ID
     let row = input.closest("tr");                // Locate the row
     let totalCell = row.querySelector(".total-price"); // Locate total price cell
 
@@ -172,7 +187,7 @@ $row0 = $kh->getKhachHangById($idkh);
 
 
     // Send update request to server
-    updateCookieQuantity(productId, quantity);
+    updateCookieQuantity(productId, sizeId, quantity);
 }
 
 // Format number with thousand separators
@@ -181,11 +196,11 @@ function formatNumber(num) {
 }
 
 // Send request to update cookie in PHP
-function updateCookieQuantity(productId, quantity) {
+function updateCookieQuantity(productId, sizeId, quantity) {
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "update_cart.php", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.send("productId=" + productId + "&quantity=" + quantity);
+    xhr.send("productId=" + productId + "&quantity=" + quantity + "&size=" + sizeId);
 }
         </script>
         <div id="notification" class="notification">Đã xóa sản phẩm</div>
@@ -251,14 +266,14 @@ function updateCookieQuantity(productId, quantity) {
                                         $tong_gio_hang = 0;
                                         if (isset($_COOKIE[$userCartCookie])) {
                                             $usercart = json_decode($_COOKIE[$userCartCookie],true);
-                                        
-                                        foreach ($usercart as $product => $quantity) {
-                                            $row = $ao->getAoById($product);
-                                            echo "<li>" . $count . ". " . $row['TEN'] . "<span>" . number_format($row['GIA'],0,"",".") . "đ" . "</span></li>";
-                                            $tong_gio_hang += $quantity*$row['GIA'];
-                                            $count++;
+                                            foreach ($usercart as $productid => $sizes) 
+                                                foreach ($sizes as $sizeId => $quantity){
+                                                    $row = $ao->getAoById($productid);
+                                                    echo "<li>" . $count . ". " . $row['TEN'] . "<span>" . number_format($row['GIA'],0,"",".") . "đ" . "</span></li>";
+                                                    $tong_gio_hang += $quantity*$row['GIA'];
+                                                    $count++;
+                                                }
                                         }
-                                    }
                                         ?>
                                     </ul>
                                 </div>
@@ -394,7 +409,7 @@ function updateCookieQuantity(productId, quantity) {
         })
         .catch(error => {
             console.error("Error placing order:", error);
-            alert("Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại sau///!");
+            alert("Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại sau///!" . error);
         });
 }
                                 </script>

@@ -1,15 +1,15 @@
 <?php 
     session_start();
+    $phone_number = $_POST['phone_number'];
+    $re_password = $_POST['re_password'];
     $username = $_POST['username'];
     $password = $_POST['password'];
-    $re_password = $_POST['re_password'];
-    $phone_number = $_POST['phone_number'];
     $address = $_POST['address'];
     require_once 'backend.php';
     require_once 'khachhang.php';
     //check if register password and re_password match
     if($password != $re_password){
-        echo'<scrip;>alert("mật khẩu chưa trùng khớp."); window.location.href="dangki.html"; </script>';
+        echo'<script>alert("mật khẩu chưa trùng khớp."); window.location.href="dangki.html"; </script>';
         exit();
     }
     else{
@@ -22,10 +22,9 @@
     }
     // Check if username is already in use
     $result = $kh->searchKhachhangByName($username);
-
     if ($result > 0) {
         // Username already exists
-        echo '<script>alert("Tên tài khoản đã được sử dụng. Vui lòng chọn tên khác."); window.location.href="dangki.html"; </scripmessage.textContent>';
+        echo '<script>alert("Tên tài khoản đã được sử dụng. Vui lòng chọn tên khác."); window.location.href="dangki.html"; </script>';
         exit(); // Stop further script execution
     }
     else{    

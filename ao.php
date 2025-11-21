@@ -14,7 +14,7 @@ class ao {
     }
 
     public function getAoById($id) {
-        $query = "SELECT * FROM ao,loaiao WHERE loaiao.idlao = ao.idlao AND IDAO = ?";
+        $query = "SELECT * FROM ao,loaiao WHERE loaiao.idloai = ao.idloai AND IDAO = ?";
         $params = [$id];
         $types = "i";
 
@@ -23,7 +23,7 @@ class ao {
     }
 
     public function getAoByLoai($idlao,$idao) {
-        $query = "SELECT * FROM ao WHERE idlao = ? and IDAO != ?";
+        $query = "SELECT * FROM ao WHERE idloai = ? and IDAO != ?";
         $params = [$idlao, $idao];
         $types = "ii";
 
@@ -31,7 +31,7 @@ class ao {
     }
 
     public function getAvailableSizes($id) {
-        $query = "SELECT distinct TENLAO FROM loaiao, ao WHERE ao.idlao = loaiao.idlao AND IDAO = ?";
+        $query = "SELECT distinct TENSIZE FROM ao_size, size WHERE ao_size.idsize = size.idsize AND IDAO = ?";
         $params = [$id];
         $types = "i";
 
@@ -39,7 +39,7 @@ class ao {
         $sizes = [];
         if ($result) {
             foreach ($result as $row) {
-                $sizes[] = $row['TENLAO'];
+                $sizes[] = $row['TENSIZE'];
             }
         }
         return $sizes;
@@ -49,11 +49,11 @@ class ao {
         $offset = ($page - 1) * $limit;
 
         if ($productParam) {
-            $query = "SELECT * FROM ao, loaiao WHERE loaiao.idlao = ao.idlao AND  TENLAO LIKE ? LIMIT ?, ?";
+            $query = "SELECT * FROM ao, loaiao WHERE loaiao.idloai = ao.idloai AND TRANGTHAI <> 0 AND TENLOAI LIKE ? LIMIT ?, ?";
             $params = ["%$productParam%", $offset, $limit];
             $types = "sii";
         } else {
-            $query = "SELECT * FROM AO LIMIT ?, ?";
+            $query = "SELECT * FROM AO WHERE TRANGTHAI <> 0 LIMIT ?, ?";
             $params = [$offset, $limit];
             $types = "ii";
         }
@@ -63,11 +63,11 @@ class ao {
 
     public function countProducts($productParam) {
         if ($productParam) {
-            $query = "SELECT COUNT(*) AS total FROM ao, loaiao WHERE ao.idlao = loaiao.idlao AND TENLAO LIKE ?";
+            $query = "SELECT COUNT(*) AS total FROM ao, loaiao WHERE ao.idloai = loaiao.idloai AND TRANGTHAI <> 0 AND TENLOAI LIKE ?";
             $params = ["%$productParam%"];
             $types = "s";
         } else {
-            $query = "SELECT COUNT(*) AS total FROM ao";
+            $query = "SELECT COUNT(*) AS total FROM ao WHERE TRANGTHAI <> 0";
             $params = [];
             $types = "";
         }
@@ -78,13 +78,13 @@ class ao {
     
     public function searchProducts($keyword, $brands, $minPrice, $maxPrice, $page, $limit) {
         $offset = ($page - 1) * $limit;
-        $query = "SELECT * FROM ao, loaiao WHERE ao.idlao = loaiao.idlao AND TEN LIKE ? ";
+        $query = "SELECT * FROM ao, loaiao WHERE ao.idloai = loaiao.idloai AND TRANGTHAI <> 0 AND TEN LIKE ? ";
         $params = ["%$keyword%"];
         $types = "s";
 
         if (!empty($brands)) {
             $brandPlaceholders = implode(',', array_fill(0, count($brands), '?'));
-            $query .= " AND loaiao.TENLAO IN ($brandPlaceholders)";
+            $query .= " AND loaiao.TENLOAI IN ($brandPlaceholders)";
             foreach ($brands as $brand) {
                 $params[] = $brand;
                 $types .= "s";
@@ -112,13 +112,13 @@ class ao {
     }
 
     public function countSearchProducts($keyword, $brands, $minPrice, $maxPrice) {
-        $query = "SELECT count(*) as total FROM ao, loaiao WHERE ao.idlao = loaiao.idlao AND TEN LIKE ? ";
+        $query = "SELECT count(*) as total FROM ao, loaiao WHERE ao.idloai = loaiao.idloai AND TEN LIKE ? ";
         $params = ["%$keyword%"];
         $types = "s";
 
         if (!empty($brands)) {
             $brandPlaceholders = implode(',', array_fill(0, count($brands), '?'));
-            $query .= " AND loaiao.TENLAO IN ($brandPlaceholders)";
+            $query .= " AND loaiao.TENLoai IN ($brandPlaceholders)";
             foreach ($brands as $brand) {
                 $params[] = $brand;
                 $types .= "s";

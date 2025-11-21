@@ -2,10 +2,18 @@
 session_start();
 $userCartCookie = "cart_" . $_SESSION["IDKH"];
 
-if (isset($_POST["productId"]) && isset($_POST["quantity"])) {
+if (isset($_POST["productId"]) && isset($_POST["quantity"]) && isset($_POST["size"])) {
     $cartItems = json_decode($_COOKIE[$userCartCookie], true);
 
-    $cartItems[$_POST["productId"]] = $_POST["quantity"]; // Update quantity
+    $productId = $_POST["productId"];
+    $quantity = intval($_POST["quantity"]);
+    $sizeId = $_POST["size"];
+
+    
+    $cartItems = isset($_COOKIE[$userCartCookie]) ? json_decode($_COOKIE[$userCartCookie], true) : [];
+
+    if (!isset($cartItems[$productId])) $cartItems[$productId] = [];
+    $cartItems[$productId][$sizeId] = $quantity;
 
     // Update the cookie
     setcookie($userCartCookie, json_encode($cartItems), time() + (86400 * 30), "/");

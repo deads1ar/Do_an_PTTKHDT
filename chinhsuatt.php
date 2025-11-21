@@ -4,8 +4,6 @@ session_start();
 if(!isset($_SESSION['IDKH']))
     header('location: ./dangnhap.html');
 $idkh = $_SESSION['IDKH'];
-//import nesessary files and establish database connection
-//$conn = new mysqli('localhost','root','','web_db');
 require_once 'backend.php';
 require_once 'khachhang.php';
 $db = new Database();
@@ -21,8 +19,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $confirm_password = $_POST['confirm_password'];
     $address = $_POST['address'];
     $phone_number = $_POST['phone_number'];
-
     $sql = "UPDATE khachhang SET TEN='$fullname', DIACHI='$address', SDT='$phone_number'";
+    if(!$fullname || !$address || !$phone_number){
+        echo "<script type='text/javascript'>alert('Vui lòng nhập đầy đủ dữ liệu bắt buộc'); window.location.href='chinhsuatt.php';</script>";
+    }
     if(!$password && $confirm_password){
         echo "<script type='text/javascript'>alert('Vui lòng nhập mật khẩu mới'); window.location.href='chinhsuatt.php';</script>";
     }
@@ -55,11 +55,11 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chỉnh sửa thông tin</title>
-    <link rel="stylesheet" href="css/chinhsuatt.css">
+    <link rel="stylesheet" href="/web_proj/css/chinhsuatt.css">
 </head>
 <div style="position: absolute; top: 10px;left: 10px;background-color: none;">
     <button class="quaylai" onclick="history.back()" title="Quay lại">
-        <img src="\web2\img\return.svg"></img>
+        <img src=".\img\return.svg"></img>
     </button>
 </div>
 <body>
@@ -92,7 +92,7 @@ $conn->close();
                 <textarea id="address" name="address" rows="3" ><?php echo $userData['DIACHI']; ?></textarea>
             </div>
 
-            <button type="submit">Lưu thông tin</button>
+            <button id="as" type="submit">Lưu thông tin</button>
         </form>
     </div>
 </body>

@@ -11,6 +11,7 @@ $ao = new ao($db);
 $dh = new donhang($db);
 $conn = $db->conn;
 // Read the raw POST body
+try{
 $rawData = file_get_contents("php://input");
 
 // Decode the JSON into a PHP array
@@ -26,19 +27,38 @@ if (empty($cartItems)) {
 // Calculate total amount
 $tongTien = 0;
 
-foreach ($cartItems as $productId => $quantity) {
-    $rowSP = $ao->getAoById($productId);
-    $tongTien += $rowSP['GIA'] * $quantity;
+foreach ($cartItems as $productId => $sizes){
+    foreach( $sizes as $sizeId => $quantity){
+        $rowSP = $ao->getAoById($productId);
+        $tongTien += $rowSP['GIA'] * $quantity;
+    }
 }
 // Insert order into DONHANG
 $insert_id = $dh->AddDonHang($_SESSION["IDKH"], $tongTien, $diachi);
 
 // Insert order items into CTDH
-foreach ($cartItems as $productId => $quantity) {
-    $dh->AddCTDH($insert_id, $productId, $quantity);
-}
+foreach ($cartItems as $productId => $sizes)
+    foreach( $sizes as $sizeId => $quantity){
+        $result = $dh->AddCTDH($insert_id, $productId, $sizeId, $quantity);
+    }
  
-echo json_encode(["status" => "success", "message" => "Đã đặt hàng thành công!"]);
+if ($result) {
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Đơn hàng đã được tạo thành công!'
+        ]);
+    }
+else {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Không thể tạo đơn hàng!'
+        ]);
+    }
+
+}  catch (Exception $e) {
+    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+    exit;
+}
 // Clear the cart cookie after successful purchase
 setcookie($userCartCookie, '', time() - 3600, '/');
 unset($_COOKIE[$userCartCookie]);

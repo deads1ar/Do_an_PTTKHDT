@@ -63,10 +63,10 @@ class donhang{
 
     //ctdh
 
-    public function AddCTDH($iddh, $idao, $sl){
-        $query = "INSERT INTO CTDH(IDDH, IDAO, SL) VALUES (?, ?, ?)";
-        $params = [$iddh, $idao, $sl];
-        $types = "iii";
+    public function AddCTDH($iddh, $idao, $idsize, $sl){
+        $query = "INSERT INTO CTDH(IDDH, IDAO, IDSIZE, SL) VALUES (?, ?, ?, ?)";
+        $params = [$iddh, $idao, $idsize, $sl];
+        $types = "iiii";
         $stmt = $this->db->conn->prepare($query);
         if (!$stmt) {
             throw new Exception("Prepare failed: " . $this->db->conn->error);
@@ -87,7 +87,11 @@ class donhang{
     }
 
     public function getctdhByIddh($iddh){
-        $query = "SELECT SL, URL, TEN, GIA FROM ao JOIN ctdh on ctdh.IDAO = ao.IDAO WHERE IDDH = ?";
+        $query =   "SELECT SL, URL, TEN, GIA, TENSIZE 
+                    FROM ao     
+                    JOIN ctdh on ctdh.IDAO = ao.IDAO 
+                    JOIN ao_size on ao_size.IDAO = ctdh.IDAO 
+                    JOIN size on size.IDSIZE = ao_size.IDSIZE WHERE IDDH = ?";
         $params = [$iddh];
         $types = "i";
 

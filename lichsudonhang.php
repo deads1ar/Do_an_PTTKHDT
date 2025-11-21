@@ -13,6 +13,7 @@ $dh = new donhang($conn);
 $result = $dh->getDonHangByUserId($idkh);
 // Count number of rows
 $num_rows = 0;
+if ($result)
 foreach ($result as $row) {
     $num_rows++;
 }

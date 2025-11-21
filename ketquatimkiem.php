@@ -9,7 +9,7 @@ $conn = $db->conn;
 $keyword = isset($_GET['keyword']) ? $conn->real_escape_string(trim($_GET['keyword'])) : '';
 $brands = isset($_GET['brand']) && is_array($_GET['brand']) ? array_map([$conn, 'real_escape_string'], $_GET['brand']) : [];
 $min_price = isset($_GET['min_price']) ? (int)$_GET['min_price'] : 1;
-$max_price = isset($_GET['max_price']) ? (int)$_GET['max_price'] : 9000000;
+$max_price = isset($_GET['max_price']) ? (int)$_GET['max_price'] : 2000000;
 $current_page = basename($_SERVER['SCRIPT_NAME']);
 $limit = 9;
 if (!isset($_GET['page'])) {
@@ -120,18 +120,18 @@ $totalPages = ceil($totalProducts / 9);
                                 </div>
                                 <div class="size__list">
                                     <label for="nike">
-                                        Nike
-                                        <input type="checkbox" id="nike" name="brand[]" value="Nike" <?php echo in_array('Nike', $brands) ? 'checked' : ''; ?>>
+                                        Áo thun
+                                        <input type="checkbox" id="nike" name="brand[]" value="Áo thun" <?php echo in_array('Áo thun', $brands) ? 'checked' : ''; ?>>
                                         <span class="checkmark"></span>
                                     </label>
                                     <label for="adidas">
-                                        Adidas
-                                        <input type="checkbox" id="adidas" name="brand[]" value="Adidas" <?php echo in_array('Adidas', $brands) ? 'checked' : ''; ?>>
+                                        Áo sơ mi
+                                        <input type="checkbox" id="adidas" name="brand[]" value="Áo sơ mi" <?php echo in_array('Áo sơ mi', $brands) ? 'checked' : ''; ?>>
                                         <span class="checkmark"></span>
                                     </label>
                                     <label for="newbalance">
-                                        New Balance
-                                        <input type="checkbox" id="newbalance" name="brand[]" value="New Balance" <?php echo in_array('New Balance', $brands) ? 'checked' : ''; ?>>
+                                        Áo khoác
+                                        <input type="checkbox" id="newbalance" name="brand[]" value="Áo khoác" <?php echo in_array('Áo khoác', $brands) ? 'checked' : ''; ?>>
                                         <span class="checkmark"></span>
                                     </label>
                                 </div>
@@ -140,7 +140,7 @@ $totalPages = ceil($totalProducts / 9);
                                         <h4>TÌM THEO GIÁ</h4>
                                     </div>
                                     <div class="filter-range-wrap">
-                                        <div class="price-range ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content" data-min="1" data-max="9000000"></div>
+                                        <div class="price-range ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content" data-min="1" data-max="2000000"></div>
                                         <div class="range-slider">
                                             <div class="price-input">
                                                 <p>Giá:</p>
@@ -187,24 +187,6 @@ $totalPages = ceil($totalProducts / 9);
                             } else {
                                 echo '<div style="margin-bottom:45px;margin-top:45px" class="col-lg-12 text-center">Không tìm thấy sản phẩm nào.</div>';
                             }
-                        ?>
-                        <?php
-                        // Pagination variables
-                        // $sql_count = "SELECT COUNT(*) AS total 
-                        //               FROM sp 
-                        //               JOIN loaisp ON sp.IDLSP = loaisp.IDLSP 
-                        //               WHERE sp.STATUS = 'active'";
-                        // if (!empty($keyword)) {
-                        //     $sql_count .= " AND sp.TEN LIKE '%$keyword%'";
-                        // }
-                        // if (!empty($brands)) {
-                        //     $brands_str = "'" . implode("','", $brands) . "'";
-                        //     $sql_count .= " AND loaisp.TENLOAI IN ($brands_str)";
-                        // }
-                        // $sql_count .= " AND sp.GIABANKM BETWEEN $min_price AND $max_price";
-                        // $result_count = $conn->query($sql_count);
-                        // $totalproduct = ($result_count && $result_count->num_rows > 0) ? $result_count->fetch_assoc()['total'] : 0;
-                        // $totalpage = ceil($totalproduct / $limit);
                         ?>
                         <div class="col-lg-12 text-center">
                             <div class="pagination__option">
@@ -371,15 +353,15 @@ $totalPages = ceil($totalProducts / 9);
         // Get min_price and max_price
         var minPrice = <?php echo $min_price; ?>;
         var maxPrice = <?php echo $max_price; ?>;
-        minPrice = Math.max(1, Math.min(minPrice, 9000000));
-        maxPrice = Math.max(minPrice, Math.min(maxPrice, 9000000));
+        minPrice = Math.max(1, Math.min(minPrice, 2000000));
+        maxPrice = Math.max(minPrice, Math.min(maxPrice, 2000000));
         $("#minamount").val(formatNumber(minPrice));
         $("#maxamount").val(formatNumber(maxPrice));
         // Initialize price slider
         $(".price-range").slider({
             range: true,
             min: 1,
-            max: 9000000,
+            max: 2000000,
             values: [minPrice, maxPrice],
             slide: function(event, ui) {
                 $("#minamount").val(formatNumber(ui.values[0]));
@@ -417,7 +399,7 @@ $totalPages = ceil($totalProducts / 9);
             .then(data => {
                 if (data === "NOT_LOGGED_IN") {
                     alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng!");
-                    window.location.href = '/web2/dangnhap.html';
+                    window.location.href = './dangnhap.html';
                 } else if (data === "SUCCESS") {
                     alert("Thêm sản phẩm thành công!");
                 } else {

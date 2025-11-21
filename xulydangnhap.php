@@ -24,11 +24,11 @@ if (isset($_POST['login'])) {
     $result = $kh->logInSearch($username, $password);
     if ($result) {
         $row = $result;
-        
+        $AD = "1";
        // Check if account is locked
-        if ($row['TRANGTHAI'] === '0') {
-            echo "<script type='text/javascript'>alert('Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.'); window.location.href='dangnhap.html';</script>";
-            exit();
+        if ($row['TRANGTHAI'] == 0) {
+            echo "<script type='text/javascript'>alert('Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên. status: " . $row['TRANGTHAI'] . "'); window.location.href='dangnhap.html';</script>";
+            die();
         }
         
         // Account is not locked, proceed with login

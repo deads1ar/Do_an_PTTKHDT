@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 $current_page = basename($_SERVER['SCRIPT_NAME']);
 
 if (!isset($_GET['page'])) {
@@ -108,17 +107,17 @@ $totalPages = ceil($totalProducts / 9);
                                 <div class="size__list">
                                     <label for="nike">
                                         Áo thun
-                                        <input type="checkbox" id="nike" name="brand[]" value="Nike" <?php echo (isset($_GET['brand']) && in_array('Nike', $_GET['brand'])) ? 'checked' : ''; ?>>
+                                        <input type="checkbox" id="nike" name="brand[]" value="Áo thun" <?php echo (isset($_GET['brand']) && in_array('Áo thun', $_GET['brand'])) ? 'checked' : ''; ?>>
                                         <span class="checkmark"></span>
                                     </label>
                                     <label for="adidas">
                                         Áo sơ mi
-                                        <input type="checkbox" id="adidas" name="brand[]" value="Adidas" <?php echo (isset($_GET['brand']) && in_array('Adidas', $_GET['brand'])) ? 'checked' : ''; ?>>
+                                        <input type="checkbox" id="adidas" name="brand[]" value="Áo sơ mi" <?php echo (isset($_GET['brand']) && in_array('áo sơ mi', $_GET['brand'])) ? 'checked' : ''; ?>>
                                         <span class="checkmark"></span>
                                     </label>
                                     <label for="jordan">
                                         Áo khoác
-                                        <input type="checkbox" id="jordan" name="brand[]" value="New Balance" <?php echo (isset($_GET['brand']) && in_array('New Balance', $_GET['brand'])) ? 'checked' : ''; ?>>
+                                        <input type="checkbox" id="jordan" name="brand[]" value="Áo khoác" <?php echo (isset($_GET['brand']) && in_array('Áo khoác', $_GET['brand'])) ? 'checked' : ''; ?>>
                                         <span class="checkmark"></span>
                                     </label>
                                 </div>
@@ -135,7 +134,7 @@ $totalPages = ceil($totalProducts / 9);
                                             <div class="price-input">
                                                 <p>Giá:</p>
                                                 <input style="text-align: center;" type="text" id="minamount" name="min_price" value="<?php echo isset($_GET['min_price']) ? htmlspecialchars($_GET['min_price']) : '1'; ?>" readonly>
-                                                <input style="text-align: center;" type="text" id="maxamount" name="max_price" value="<?php echo isset($_GET['max_price']) ? htmlspecialchars($_GET['max_price']) : '9000000'; ?>" readonly>
+                                                <input style="text-align: center;" type="text" id="maxamount" name="max_price" value="<?php echo isset($_GET['max_price']) ? htmlspecialchars($_GET['max_price']) : '2000000'; ?>" readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -157,7 +156,7 @@ $totalPages = ceil($totalProducts / 9);
                 <div class="product__item__pic">
 
 
-<img src="<?php echo !empty($row['URL']) ? htmlspecialchars($row['URL']) : 'img/sanpham/default.jpg'; ?>" 
+<img src="./<?php echo htmlspecialchars($row['URL']); ?>"
      alt="<?php echo htmlspecialchars($row['TEN']); ?>" 
      class="product__image">
 
@@ -383,16 +382,16 @@ $totalPages = ceil($totalProducts / 9);
         }
         // Get min_price and max_price
         var minPrice = <?php echo isset($_GET['min_price']) ? (int)$_GET['min_price'] : 1; ?>;
-        var maxPrice = <?php echo isset($_GET['max_price']) ? (int)$_GET['max_price'] : 9000000; ?>;
-        minPrice = Math.max(1, Math.min(minPrice, 9000000));
-        maxPrice = Math.max(minPrice, Math.min(maxPrice, 9000000));
+        var maxPrice = <?php echo isset($_GET['max_price']) ? (int)$_GET['max_price'] : 2000000; ?>;
+        minPrice = Math.max(1, Math.min(minPrice, 2000000));
+        maxPrice = Math.max(minPrice, Math.min(maxPrice, 2000000));
         $("#minamount").val(formatNumber(minPrice));
         $("#maxamount").val(formatNumber(maxPrice));
         // Initialize price slider
         $(".price-range").slider({
             range: true,
             min: 1,
-            max: 9000000,
+            max: 2000000,
             values: [minPrice, maxPrice],
             slide: function(event, ui) {
                 $("#minamount").val(formatNumber(ui.values[0]));

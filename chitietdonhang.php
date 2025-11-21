@@ -151,7 +151,7 @@ foreach($result as $a)
                             foreach($result as $row){ ?>
                                 <tr class="product-item">
                                     <td><img src="<?php echo $row['URL']; ?>" alt="IMG"></td>
-                                    <td><?php echo $row['TEN']; ?></td>
+                                    <td><?php echo $row['TEN'] . "(size: " . $row['TENSIZE'] . ")"?></td>
                                     <td><?php echo $row['SL']; ?></td>
                                     <td><?php echo number_format($row['GIA'],0,'','.') . "đ"; ?></td>
                                     <td><?php echo "<span>" . number_format(($row['GIA'] * $row['SL']),0,'','.') . "đ"; ?></span></td>

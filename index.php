@@ -15,14 +15,14 @@
     rel="stylesheet">
 
     <!-- Css Styles -->
-    <link rel="stylesheet" href="web2/css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" href="web2/css/font-awesome.min.css" type="text/css">
-    <link rel="stylesheet" href="web2/css/elegant-icons.css" type="text/css">
-    <link rel="stylesheet" href="web2/css/jquery-ui.min.css" type="text/css">
-    <link rel="stylesheet" href="web2/css/magnific-popup.css" type="text/css">
-    <link rel="stylesheet" href="web2/css/owl.carousel.min.css" type="text/css">
-    <link rel="stylesheet" href="web2/css/slicknav.min.css" type="text/css">
-    <link rel="stylesheet" href="web2/css/style.css" type="text/css">
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="css/jquery-ui.min.css" type="text/css">
+    <link rel="stylesheet" href="css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="css/style.css" type="text/css">
 
 
 </head>
@@ -372,15 +372,15 @@ Ashion – Không chỉ là áo thun, mà là phong cách sống.</strong></p>
 <!-- Search End -->
 
 <!-- Js Plugins -->
-<script src="web2/js/jquery-3.3.1.min.js"></script>
-<script src="web2/js/bootstrap.min.js"></script>
-<script src="web2/js/jquery.magnific-popup.min.js"></script>
-<script src="web2/js/jquery-ui.min.js"></script>
-<script src="web2/js/mixitup.min.js"></script>
-<script src="web2/js/jquery.countdown.min.js"></script>
-<script src="web2/js/jquery.slicknav.js"></script>
-<script src="web2/js/owl.carousel.min.js"></script>
-<script src="web2/js/jquery.nicescroll.min.js"></script>
-<script src="web2/js/main.js"></script>
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.magnific-popup.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/mixitup.min.js"></script>
+<script src="js/jquery.countdown.min.js"></script>
+<script src="js/jquery.slicknav.js"></script>
+<script src="js/owl.carousel.min.js"></script>
+<script src="js/jquery.nicescroll.min.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>

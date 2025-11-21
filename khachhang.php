@@ -35,7 +35,7 @@ class khachhang {
         return $result;
     }
     public function logInSearch($ten, $pword){
-        $query = "SELECT IDKH FROM khachhang WHERE TEN = ? AND PWORD = ?";
+        $query = "SELECT IDKH, TRANGTHAI, TEN FROM khachhang WHERE TEN = ? AND PWORD = ?";
         $params = [$ten, $pword];
         $types = "ss";
 

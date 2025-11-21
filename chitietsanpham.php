@@ -11,16 +11,16 @@ if (isset($_GET['id'])) {
 //lấy chi tiết sản phẩm
 if(!$result = $ao->getAoById($id))
     {
-    echo "Sản phẩm không tồn tại.";
-    exit;
+    echo '<script>alert("sản phẩm không tồn tại."); window.location.href="sanpham.php"; </script>';
+    //exit;
 } else {
     $row = $result;
 }
 //tìm kích cỡ có sẵn
 if(!$sizes = $ao->getAvailableSizes($id))
 {
-    echo "Sản phẩm không tồn tại.";
-    exit;
+    //echo "Sản phẩm không tồn tại.";
+    //exit;
 }
 ?>
 
@@ -48,7 +48,6 @@ if(!$sizes = $ao->getAvailableSizes($id))
     <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
     <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="css/style.css" type="text/css">
-
 
     <!-- Custom CSS for Quantity Selector -->
     <style>
@@ -139,7 +138,7 @@ if(!$sizes = $ao->getAvailableSizes($id))
                 <div class="col-lg-12">
                     <div class="breadcrumb__links">
                         <a href="/index.php"><i class="fa fa-home"></i> Trang chủ</a>
-                        <a href="/web2/sanpham.php">Sản phẩm </a>
+                        <a href="./sanpham.php">Sản phẩm </a>
                         <span><?php echo $row['TEN']; ?></span>
                     </div>
                 </div>
@@ -149,7 +148,7 @@ if(!$sizes = $ao->getAvailableSizes($id))
     <!-- Breadcrumb End -->
 <?php
 $tenSanPham = strtolower($row['TEN']);
-$loaiao = $row['IDLAO'];
+$loaiao = $row['IDLOAI'];
 $tenFile = 'default.jpg';
 
 if (strpos($tenSanPham, 'polo') !== false) {
@@ -181,35 +180,10 @@ if (strpos($tenSanPham, 'polo') !== false) {
             <div class="row">
                 <div class="col-lg-6">
                     <div class="product__details__pic">
-                        <div class="product__details__pic__left product__thumb nice-scroll">
-                            <a class="pt_active" href="#product-1">
-                             <?php echo '<img src="img/sanpham/' . $tenFile . '" alt="ảnh sản phẩm">'; ?>
-
-
-                            </a>
-                            <a class="pt" href="#product-2">
-                                <img src="img/shop/Product Detail/shop-<?php echo $id; ?>/2.jpg" alt="">
-                            </a>
-                            <a class="pt" href="#product-3">
-                                <img src="img/shop/Product Detail/shop-<?php echo $id; ?>/3.jpg" alt="">
-                            </a>
-                            <a class="pt" href="#product-4">
-                                <img src="img/shop/Product Detail/shop-<?php echo $id; ?>/4.jpg" alt="">
-                            </a>
-                          
-                        </div>
                         <div class="product__details__slider__content">
                             <div class="product__details__pic__slider owl-carousel">
-                                <?php 
-$imgPath = 'img/sanpham/' . $tenFile;
-
-?>
-<img data-hash="product-1" class="product__big__img" src="<?php echo htmlspecialchars($imgPath); ?>" alt="ảnh sản phẩm">
-
-                                <img data-hash="product-2" class="product__big__img" src="img/shop/Product Detail/shop-<?php echo $id; ?>/2.jpg" alt="ảnh sản phẩm">
-                                <img data-hash="product-3" class="product__big__img" src="img/shop/Product Detail/shop-<?php echo $id; ?>/3.jpg" alt="ảnh sản phẩm">
-                                <img data-hash="product-4" class="product__big__img" src="img/shop/Product Detail/shop-<?php echo $id; ?>/4.jpg" alt="ảnh sản phẩm">
-                                <img data-hash="product-5" class="product__big__img" src="img/shop/Product Detail/shop-<?php echo $id; ?>/5.jpg" alt="ảnh sản phẩm">
+                                <?php $imgPath = 'img/sanpham/' . $tenFile;?>
+                                <img data-hash="product-1" class="product__big__img" src="<?php echo htmlspecialchars($imgPath); ?>" alt="ảnh sản phẩm">
                             </div>
                         </div>
                     </div>
@@ -220,41 +194,20 @@ $imgPath = 'img/sanpham/' . $tenFile;
                       <div class="product__details__price"><?php echo number_format($row['GIA'], 0, "", "."); ?> đ</div>
 
                         <p><?php echo $row['MOTA']; ?></p>
-                        <div class="product__details__button">
-                            <div class="quantity">
+                        <div class="product__details__button" style="text-align: center; margin-top: 20px;">
+                            <div class="quantity" style="margin-bottom: 15px;">
                                 <span>Số lượng:</span>
-                                <div class="quantity-selector">
+                                <div class="quantity-selector" style="display: inline-flex; align-items: center; gap: 5px;">
                                     <button onclick="decreaseQuantity()">-</button>
-                                    <input type="number" id="quantity" value="1" min="1">
+                                    <input type="number" id="quantity" value="1" min="1" style="width: 50px; text-align: center;">
                                     <button onclick="increaseQuantity()">+</button>
                                 </div>
                             </div>
-                            <a href="#" onclick="addToCart(<?php echo $row['IDAO']; ?>)">Thêm vào giỏ hàng</a>
-                            <script>
-                                function increaseQuantity() {
-                                    let quantityInput = document.getElementById('quantity');
-                                    quantityInput.value = parseInt(quantityInput.value) + 1;
-                                }
-
-                                function decreaseQuantity() {
-                                    let quantityInput = document.getElementById('quantity');
-                                    if (parseInt(quantityInput.value) > 1) {
-                                        quantityInput.value = parseInt(quantityInput.value) - 1;
-                                    }
-                                }
-
-                                function addToCart(productId) {
-                                    let quantity = document.getElementById("quantity").value || 1; // Get quantity
-                                    fetch('cart_handler.php', {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                                        body: `id=${productId}&quantity=${quantity}`
-                                    })
-                                        .then(response => response.text())
-                                        .then(data => alert("Thêm sản phẩm thành công!"))
-                                        .catch(error => console.error("Error:", error));
-                                }
-                            </script>
+                            <button 
+                                onclick="addToCart(<?php echo $row['IDAO']; ?>)" 
+                                style="display: inline-block; padding: 10px 15px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">
+                                Thêm vào giỏ hàng
+                            </button>
                         </div>
                         <div class="product__details__widget">
                             <ul>
@@ -266,22 +219,15 @@ $imgPath = 'img/sanpham/' . $tenFile;
                                 </li>
                                 <li>
                                     <span>Loại sản phẩm:</span>
-                                    <p><?php echo $row['TENLAO']; ?></p>
+                                    <p><?php echo $row['TENLOAI']; ?></p>
                                 </li>
-                                    <label for="size">Chọn size:</label>
+                                <li>
+                                    <span><label for="size">Chọn size:</label></span>
                                     <select name="IDSIZE" id="size" required>
-                                    <option value="S">S</option>
-                                    <option value="M">M</option>
-                                    <option value="L">L</option>
-                                    <option value="XL">XL</option>
-                                    <?php
-                                    foreach ($sizes as $size) {
-                                        echo '<option value="' . htmlspecialchars($size) . '">' . htmlspecialchars($size) . '</option>';
-                                    }
-                                    ?>
+                                        <?php
+                                    foreach ($sizes as $size) { 
+                                        echo '<option value="' . htmlspecialchars($size) . '">' . htmlspecialchars($size) . '</option>'; } ?>
                                     </select>
-
-
                                 </li>
                             </ul>
                         </div>
@@ -292,7 +238,7 @@ $imgPath = 'img/sanpham/' . $tenFile;
 // ===== LẤY SẢN PHẨM LIÊN QUAN =====
 
 // Truy vấn sản phẩm liên quan (cùng loại, khác ID hiện tại)
-$result_related = $ao->GetAoByLoai($row['IDLAO'], $row['IDAO']);
+$result_related = $ao->GetAoByLoai($row['IDLOAI'], $row['IDAO']);
 ?>
 
             <!-- Related Products Section -->
@@ -324,15 +270,6 @@ $stock_label = ($related_row['TRANGTHAI'] == 1) ? '' : '<div class="label stocko
                                     </div>
                                     <div class="product__item__text">
                                         <h6><a href="chitietsanpham.php?id=<?php echo $related_row['IDAO']; ?>"><?php echo $related_row['TEN']; ?></a></h6>
-                                        <div class="rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                        </div>
-                                <div class="product__price"><?php echo number_format($related_row['GIA'], 0, "", "."); ?> đ</div>
-
                                     </div>
                                 </div>
                             <?php } //end foreach ?>
@@ -513,6 +450,42 @@ $stock_label = ($related_row['TRANGTHAI'] == 1) ? '' : '<div class="label stocko
             });
         });
     </script>
+    
+    <script>
+        function increaseQuantity() {
+            let quantityInput = document.getElementById('quantity');
+            quantityInput.value = parseInt(quantityInput.value) + 1;
+            }   
+
+        function decreaseQuantity() {
+            let quantityInput = document.getElementById('quantity');
+            if (parseInt(quantityInput.value) > 1) {
+                quantityInput.value = parseInt(quantityInput.value) - 1;
+            }
+        }
+
+        function addToCart(productId) {
+            let quantity = document.getElementById("quantity").value || 1; // Get quantity
+            fetch('cart_handler.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `id=${productId}&quantity=${quantity}&size=${document.getElementById("size").value}`  
+            })
+                .then(response => response.text())
+                .then(data => {
+                if (data == "NOT_LOGGED_IN") {
+                    alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng!");
+                    window.location.href = './dangnhap.html';
+                } else if (data === "SUCCESS") {
+                    alert("Thêm sản phẩm thành công!");
+                } else {
+                    alert("Có lỗi xảy ra!");
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+
 </body>
 
 </html>
