@@ -82,12 +82,21 @@ foreach($result as $a)
     <?php include 'header.php' ?>
     <!-- Header Section End -->
 
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Chi Tiết Đơn Hàng</title>
+    </head>
+    <body>
+        
     <!-- Breadcrumb Begin -->
     <div class="breadcrumb-option">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="breadcrumb__links">
+                    <div class="breadcrumb__links" style="margin-left:-200px;margin-bottom:20px;">
                         <a href="./index_logged_in.html"><i class="fa fa-home"></i> Trang chủ</a>
                         <a href="./lichsudonhang.html">Lịch sử mua hàng</a>
                         <span>Chi Tiết Đơn Hàng</span>
@@ -97,15 +106,6 @@ foreach($result as $a)
         </div>
     </div>
     <!-- Breadcrumb End -->
-
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Chi Tiết Đơn Hàng</title>
-    </head>
-    <body>
         <div class="order-container">
             <header class="order-header">
                 <h1>Chi Tiết Đơn Hàng</h1>
