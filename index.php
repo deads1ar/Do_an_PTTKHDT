@@ -104,10 +104,11 @@ Ashion – Không chỉ là áo thun, mà là phong cách sống.</strong></p>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 p-0">
-                        <div class="categories__item set-bg" data-setbg="img/categories/8.png">
+                        <div class="categories__item set-bg" data-setbg="img/categories/category-2.jpg">
                             <div class="categories__text">
-                                <h4>Áo vest</h4>
-                                <a href="sanpham.php">Shop now</a>
+                                <h4>
+                                    <a href="sanpham.php">Shop now</a>
+                                </h4>
                             </div>
                         </div>
                     </div>
